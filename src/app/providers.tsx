@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react"
 import { Provider } from "react-redux"
-import { store } from "@/stores"
+import { store } from "@/store"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "@/lib/queryClient"
 
@@ -12,6 +12,6 @@ export function Providers({ children }: { children: ReactNode }) {
       <QueryClientProvider client={queryClient}>
         {children}
       </QueryClientProvider>
-    </Provider>
+    </Provider> 
   )
 }
