@@ -13,7 +13,25 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Theme sync script - runs BEFORE paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('theme') || 'dark';
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (_) {}
+              })();
+            `,
+          }}
+          key="theme-script"
+        />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>

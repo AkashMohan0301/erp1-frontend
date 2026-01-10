@@ -3,109 +3,89 @@
 import { ReactNode } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { toggleSidebar } from "@/store/uiSlice"
+import { ThemeToggle } from "@/components/common/ThemeToggle"
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
+export default function DashboardLayout({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch()
   const sidebarOpen = useAppSelector((state) => state.ui.sidebarOpen)
 
   return (
-    <main className="flex min-h-screen bg-slate-950 text-slate-50">
-      {/* Sidebar */}
+    <main className="flex min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50">
+      {/* Simple Sidebar */}
       {sidebarOpen && (
-        <aside className="hidden w-64 flex-col border-r border-slate-800 bg-slate-950/80 px-4 py-4 sm:flex">
-          <div className="mb-6 flex items-center justify-between gap-2">
+        <aside className="w-60 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sm:flex flex-col">
+          <div className="p-4 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500 text-sm font-semibold">
+              <div className="h-8 w-8 bg-blue-500 rounded text-white flex items-center justify-center font-semibold text-sm">
                 ERP1
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-100">
-                  ERP1 Dashboard
-                </p>
-                <p className="text-[11px] text-slate-500">Admin Panel</p>
+                <p className="text-sm font-semibold">ERP1 Dashboard</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Admin</p>
               </div>
             </div>
           </div>
 
-          <nav className="space-y-1 text-sm">
-            <a
-              href="/dashboard"
-              className="flex items-center justify-between rounded-md bg-slate-900 px-3 py-2 text-slate-100"
-            >
-              <span>Overview</span>
-              <span className="text-[10px] text-emerald-400">Live</span>
+          <nav className="flex-1 p-2 space-y-1">
+            <a href="/dashboard" className="flex items-center p-2 rounded-lg bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
+              Overview
             </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-slate-300 hover:bg-slate-900"
-            >
+            <a href="#" className="flex items-center p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
               Finance
             </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-slate-300 hover:bg-slate-900"
-            >
+            <a href="#" className="flex items-center p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
               Inventory
             </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-slate-300 hover:bg-slate-900"
-            >
-              HR & Payroll
+            <a href="#" className="flex items-center p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+              HR
             </a>
-            <a
-              href="#"
-              className="block rounded-md px-3 py-2 text-slate-300 hover:bg-slate-900"
-            >
-              Sales & CRM
+            <a href="#" className="flex items-center p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+              Sales
             </a>
           </nav>
         </aside>
       )}
 
-      {/* Main content area */}
-      <div className="flex min-h-screen flex-1 flex-col">
-        {/* Topbar */}
-        <header className="flex h-14 items-center justify-between border-b border-slate-800 bg-slate-950/70 px-4 backdrop-blur">
-          <div className="flex items-center gap-3 text-xs text-slate-400">
+      {/* Main content */}
+      <div className="flex flex-1 flex-col min-h-screen">
+        {/* Simple Topbar */}
+        <header className="h-14 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center px-4 shadow-sm">
+          <div className="flex items-center gap-3">
             <button
-              type="button"
-              className="rounded-md border border-slate-700 px-2 py-1 text-[11px] text-slate-200 hover:bg-slate-900 sm:hidden"
               onClick={() => dispatch(toggleSidebar())}
+              className="p-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 sm:hidden"
             >
-              {sidebarOpen ? "Hide" : "Menu"}
+              {sidebarOpen ? "←" : "→"}
             </button>
             <div>
-              <p className="font-medium text-slate-100">Today&apos;s Overview</p>
-              <p>Company: Demo Corp</p>
+              <h1 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Dashboard
+              </h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Demo Corp</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 text-xs">
-            <button className="rounded-md border border-slate-700 px-3 py-1 text-slate-200 hover:bg-slate-900">
+          <div className="flex items-center gap-2 ml-auto">
+            <ThemeToggle />
+            <button className="px-3 py-1 text-xs border rounded-lg border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
               Settings
             </button>
-            <button className="rounded-md bg-slate-100 px-3 py-1 text-slate-900 hover:bg-white">
+            <button className="px-3 py-1 text-xs bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
               Logout
             </button>
           </div>
         </header>
 
-        {/* Scrollable main + footer */}
-        <div className="flex flex-1 flex-col">
-          <div className="flex-1 overflow-y-auto bg-slate-950 px-4 py-4">
-            {children}
-          </div>
+        {/* Main content area */}
+        <main className="flex-1 p-6 overflow-auto bg-gray-50 dark:bg-slate-900">
+          {children}
+        </main>
 
-          <footer className="flex h-10 items-center justify-between border-t border-slate-800 bg-slate-950 px-4 text-[11px] text-slate-500">
-            <span>ERP1 · Internal dashboard</span>
-            <span>v1.0.0</span>
-          </footer>
-        </div>
+        {/* Simple Footer */}
+        <footer className="h-12 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between px-4 text-xs text-slate-500 dark:text-slate-400">
+          <span>ERP1 Dashboard</span>
+          <span>v1.0.0</span>
+        </footer>
       </div>
     </main>
   )

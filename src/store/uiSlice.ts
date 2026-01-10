@@ -8,7 +8,7 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  theme: "dark",
+  theme: "dark", // default dark
   sidebarOpen: true,
 }
 
@@ -19,14 +19,18 @@ const uiSlice = createSlice({
     toggleSidebar(state) {
       state.sidebarOpen = !state.sidebarOpen
     },
-    setSidebarOpen(state, action: PayloadAction<boolean>) {
-      state.sidebarOpen = action.payload
-    },
     setTheme(state, action: PayloadAction<ThemeMode>) {
       state.theme = action.payload
+      // Sync to localStorage
+      localStorage.setItem('theme', action.payload)
     },
+    toggleTheme(state) {
+      const newTheme = state.theme === "dark" ? "light" : "dark"
+      state.theme = newTheme
+      localStorage.setItem('theme', newTheme)
+    }
   },
 })
 
-export const { toggleSidebar, setSidebarOpen, setTheme } = uiSlice.actions
+export const { toggleSidebar, setTheme, toggleTheme } = uiSlice.actions
 export default uiSlice.reducer
