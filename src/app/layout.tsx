@@ -1,16 +1,18 @@
-import type { Metadata } from "next"
-import "./globals.css"
-import { Providers } from "./providers"
+//path: src/app/layout.tsx
+import type { Metadata } from "next";
+import "./globals.css";
+import { ProvidersClient } from "@/components/providers/providersClient";
+import { ProvidersServer } from "@/components/providers/providersServer";
 
 export const metadata: Metadata = {
   title: "ERP1 - Enterprise Resource Planning",
   description: "Professional ERP dashboard application",
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -33,8 +35,8 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Providers>{children}</Providers>
+          <ProvidersClient>{children}</ProvidersClient>
       </body>
     </html>
-  )
+  );
 }

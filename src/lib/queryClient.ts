@@ -1,13 +1,13 @@
-"use client"
+// src/lib/queryClient.ts
+import { QueryClient } from "@tanstack/react-query";
 
-import { QueryClient } from "@tanstack/react-query"
-
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60, // 1 min
-      refetchOnWindowFocus: false,
-      retry: 1,
+export function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60, // 1 minute
+        refetchOnWindowFocus: false,
+      },
     },
-  },
-})
+  });
+}

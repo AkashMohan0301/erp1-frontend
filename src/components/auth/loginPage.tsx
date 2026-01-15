@@ -1,22 +1,33 @@
-"use client"
-
-import { FormEvent, useState } from "react"
-import Link from "next/link"
+//path: src/components/auth/loginPage.tsx
+"use client";
+import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { api } from "@/lib/api"
+
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      router.push("/dashboard")
-    }, 800)
-  }
+  const loginMutation = useMutation({
+    mutationFn: (credentials: { email: string; password: string }) =>
+      api.post("/auth/login", credentials),
+    onSuccess: (data: any) => {
+      localStorage.setItem("authToken", data.token);
+      router.push("/dashboard");
+    },
+    onError: (error) => {
+      console.error("Login failed:", error);
+    },
+  });
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    loginMutation.mutate({ email, password });
+  };
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -36,6 +47,18 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+                        <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Subscriber Id
+              </label>
+              <input
+                type="text"
+                required
+                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="••••••••"
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Email
@@ -66,19 +89,18 @@ export default function LoginPage() {
                   type="checkbox"
                   className="w-4 h-4 text-blue-600 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 rounded focus:ring-blue-500"
                 />
-                <span className="ml-2 text-slate-700 dark:text-slate-300">Remember me</span>
+                <span className="ml-2 text-slate-700 dark:text-slate-300">
+                  Remember me
+                </span>
               </label>
-              <Link href="#" className="text-blue-600 dark:text-blue-400 hover:underline">
-                Forgot password?
-              </Link>
             </div>
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loginMutation.isPending}
               className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loginMutation.isPending ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
@@ -88,5 +110,5 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

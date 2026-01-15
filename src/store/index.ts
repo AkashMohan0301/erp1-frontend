@@ -3,7 +3,7 @@ import uiReducer from "./uiSlice"
 
 export const store = configureStore({
   reducer: {
-    ui: uiReducer,
+    ui: uiReducer
   },
 })
 

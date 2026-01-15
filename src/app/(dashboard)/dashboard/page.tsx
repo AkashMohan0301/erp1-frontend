@@ -1,13 +1,22 @@
-export default function DashboardPage() {
+// app/(dashboard)/dashboard/page.tsx
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { ProvidersClient } from "@/components/providers/providersClient";
+import { ProvidersServer } from "@/components/providers/providersServer";
+import { apiQueries } from "@/lib/apiQueries";
+
+export default async function DashboardPage() {
+  // const dehydratedState = await ProvidersServer(async (qc) => {
+  //   await qc.prefetchQuery(apiQueries.dashboardStats().queryKey, apiQueries.dashboardStats().queryFn);
+  // });
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-xl font-semibold text-slate-50">
-        Dashboard Overview
-      </h1>
-      <p className="text-sm text-slate-400">
-        This is the main ERP1 dashboard. Next, we will design proper cards,
-        charts, and layout for this area.
-      </p>
-    </div>
-  )
+    <ProvidersClient dehydratedState={null}>
+      <DashboardLayout>
+        <div>
+          <h1 className="text-xl font-semibold">Dashboard Overview</h1>
+          <p>Server-prefetched and hydrated with React Query v5</p>
+        </div>
+      </DashboardLayout>
+    </ProvidersClient>
+  );
 }
