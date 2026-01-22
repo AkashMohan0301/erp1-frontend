@@ -1,33 +1,30 @@
-//path: src/components/auth/loginPage.tsx
 "use client";
-import { useMutation } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-import { api } from "@/lib/api"
 
+import { useRouter } from "next/navigation";
+import { useLogin } from "@/hooks/useLogin";
 
 export default function LoginPage() {
   const router = useRouter();
-
-  const loginMutation = useMutation({
-    mutationFn: (credentials: { email: string; password: string }) =>
-      api.post("/auth/login", credentials),
-    onSuccess: (data: any) => {
-      localStorage.setItem("authToken", data.token);
-      router.push("/dashboard");
-    },
-    onError: (error) => {
-      console.error("Login failed:", error);
-    },
-  });
+  const loginMutation = useLogin();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
+    const username = formData.get("username") as string;
     const password = formData.get("password") as string;
 
-    loginMutation.mutate({ email, password });
+    loginMutation.mutate(
+      { username, password },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+      }
+    );
   };
+
+
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -47,27 +44,16 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
+            <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Subscriber Id
+                Username
               </label>
               <input
                 type="text"
+                name="username"
                 required
                 className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="••••••••"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                required
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="you@company.com"
+                placeholder="admin"
               />
             </div>
 
@@ -77,22 +63,11 @@ export default function LoginPage() {
               </label>
               <input
                 type="password"
+                name="password"
                 required
                 className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="••••••••"
               />
-            </div>
-
-            <div className="flex items-center justify-between text-xs">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 rounded focus:ring-blue-500"
-                />
-                <span className="ml-2 text-slate-700 dark:text-slate-300">
-                  Remember me
-                </span>
-              </label>
             </div>
 
             <button

@@ -1,54 +1,49 @@
 // src/lib/api.ts
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios from "axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5168/api",
+  withCredentials: true, // REQUIRED for refresh cookie
+});
 
-class ApiClient {
-  private client: AxiosInstance;
+let accessToken: string | null = null;
 
-  constructor() {
-    this.client = axios.create({
-      baseURL: API_BASE_URL,
-      timeout: 10000,
-      headers: { "Content-Type": "application/json" },
-    });
+export const setAccessToken = (token: string | null) => {
+  accessToken = token;
+};
 
-    this.client.interceptors.request.use(
-      (config) => {
-        const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
-        if (token) config.headers.Authorization = `Bearer ${token}`;
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-    this.client.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401 && typeof window !== "undefined") {
-          localStorage.removeItem("authToken");
-          window.location.href = "/login";
-        }
-        return Promise.reject(error);
+    // If access token expired
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        // Call refresh (cookie will be sent automatically)
+        const res = await api.post("/auth/refresh");
+
+        const newAccessToken = res.data.data.accessToken;
+
+        setAccessToken(newAccessToken);
+
+        // Retry original request
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        // Refresh failed → logout
+        setAccessToken(null);
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
       }
-    );
-  }
+    }
 
-  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.client.get(url, config).then((res) => res.data);
+    return Promise.reject(error);
   }
+);
 
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    return this.client.post(url, data, config).then((res) => res.data);
-  }
-
-  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    return this.client.put(url, data, config).then((res) => res.data);
-  }
-
-  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return this.client.delete(url, config).then((res) => res.data);
-  }
-}
-
-export const api = new ApiClient();
