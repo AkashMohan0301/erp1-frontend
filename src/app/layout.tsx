@@ -1,8 +1,6 @@
-//path: src/app/layout.tsx
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
-import { ProvidersClient } from "@/components/providers/providersClient";
-import { ProvidersServer } from "@/components/providers/providersServer";
 
 export const metadata: Metadata = {
   title: "ERP1 - Enterprise Resource Planning",
@@ -17,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Theme sync script - runs BEFORE paint */}
+        {/* Theme sync script BEFORE paint */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -31,12 +29,9 @@ export default function RootLayout({
               })();
             `,
           }}
-          key="theme-script"
         />
       </head>
-      <body>
-          <ProvidersClient>{children}</ProvidersClient>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

@@ -18,12 +18,11 @@ export default function LoginPage() {
       { username, password },
       {
         onSuccess: () => {
-          router.push("/dashboard");
+          router.replace("/dashboard"); // replace is better after login
         },
       }
     );
   };
-
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4">
@@ -42,6 +41,13 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {/* Error */}
+          {loginMutation.isError && (
+            <div className="mb-4 text-sm text-red-600 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              {loginMutation.error.message}
+            </div>
+          )}
+
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -52,7 +58,7 @@ export default function LoginPage() {
                 type="text"
                 name="username"
                 required
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800"
                 placeholder="admin"
               />
             </div>
@@ -65,7 +71,7 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 required
-                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800"
                 placeholder="••••••••"
               />
             </div>
@@ -73,7 +79,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loginMutation.isPending}
-              className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50"
             >
               {loginMutation.isPending ? "Signing in..." : "Sign In"}
             </button>
