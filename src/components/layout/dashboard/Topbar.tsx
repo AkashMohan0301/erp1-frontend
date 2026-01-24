@@ -2,9 +2,9 @@
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toggleSidebar } from "@/store/uiSlice";
-import { ThemeToggle } from "@/components/common/themes/ThemeToggle";
+import { ThemeToggle } from "@/components/ui/themes/ThemeToggle";
 import { useRouter } from "next/navigation";
-import { useLogout } from "@/hooks/useLogout";
+import { useLogout } from "@/features/auth/auth.hooks";
 
 export default function TopBar() {
   const dispatch = useAppDispatch();

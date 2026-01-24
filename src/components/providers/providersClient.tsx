@@ -9,7 +9,7 @@ import {
   HydrationBoundary,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ThemeSync } from "@/components/common/themes/ThemeSync";
+import { ThemeSync } from "@/components/ui/themes/ThemeSync";
 import type { DehydratedState } from "@tanstack/react-query";
 
 interface ProvidersClientProps {

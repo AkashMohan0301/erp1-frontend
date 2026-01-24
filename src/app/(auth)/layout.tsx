@@ -1,6 +1,6 @@
 "use client";
 
-import { ProvidersClient } from "@/components/providers/providersClient";
+import { ProvidersClient } from "@/components/providers/ProvidersClient";
 
 export default function AuthLayout({
   children,
