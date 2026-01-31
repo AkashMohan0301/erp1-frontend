@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useLogin } from "@/features/auth/auth.hooks";
 import { useFormError } from "@/hooks/useFormError";
-import { FormError } from "@/components/ui/FormError";
+import { FormError } from "@/components/ui/PopupMessage";
+import InputField from "@/components/ui/InputField";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -30,6 +31,8 @@ export default function LoginForm() {
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4">
+      {/* Error */}
+      <FormError message={message} />
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-8">
           {/* Header */}
@@ -45,17 +48,14 @@ export default function LoginForm() {
             </p>
           </div>
 
-          {/* Error */}
-          <FormError message={message} />
-
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
+            <InputField
               name="username"
               label="Username"
               error={fieldErrors.username}
             />
-            <Input
+            <InputField
               name="password"
               label="Password"
               type="password"
@@ -80,31 +80,3 @@ export default function LoginForm() {
   );
 }
 
-/* small local component (optional) */
-function Input({
-  label,
-  error,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
-  error?: string[];
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-        {label}
-      </label>
-
-      <input
-        className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-slate-800 ${
-          error
-            ? "border-red-500 focus:ring-red-500"
-            : "border-slate-300 dark:border-slate-700"
-        }`}
-        {...props}
-      />
-
-      {error && <p className="mt-1 text-xs text-red-600">{error[0]}</p>}
-    </div>
-  );
-}
