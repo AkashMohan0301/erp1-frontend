@@ -32,22 +32,9 @@ const uiSlice = createSlice({
     toggleSidebar(state) {
       state.sidebarOpen = !state.sidebarOpen
     },
-    setTheme(state, action: PayloadAction<ThemeMode>) {
-      state.theme = action.payload
-      if (typeof window !== "undefined") {
-        localStorage.setItem("theme", action.payload)
-      }
-    },
-    toggleTheme(state) {
-      const newTheme = state.theme === "dark" ? "light" : "dark"
-      state.theme = newTheme
-      if (typeof window !== "undefined") {
-        localStorage.setItem("theme", newTheme)
-      }
-    },
   },
 })
 
 
-export const { toggleSidebar, setTheme, toggleTheme } = uiSlice.actions
+export const { toggleSidebar } = uiSlice.actions
 export default uiSlice.reducer

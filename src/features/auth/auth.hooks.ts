@@ -1,26 +1,32 @@
-import { useMutation } from "@tanstack/react-query";
-import { login, logout } from "./auth.api";
-import { setAccessToken } from "@/lib/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { login, logout, getMe } from "./auth.api";
 
-import type { LoginInput, LoginResponse } from "./auth.types";
-import type { ApiError, ApiResponse } from "@/types/api";
+export function useAuth() {
+  return useQuery({
+    queryKey: ["auth", "me"],
+    queryFn: getMe,
+    retry: false,
+  });
+}
 
 export function useLogin() {
-  return useMutation<ApiResponse<LoginResponse>, ApiError, LoginInput>({
-    mutationFn: login,
+  const qc = useQueryClient();
 
-    onSuccess: (response) => {
-      setAccessToken(response.data.accessToken);
+  return useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["auth", "me"] });
     },
   });
 }
 
 export function useLogout() {
+  const qc = useQueryClient();
+
   return useMutation({
     mutationFn: logout,
-
     onSuccess: () => {
-      setAccessToken(null);
+      qc.clear();
     },
   });
 }

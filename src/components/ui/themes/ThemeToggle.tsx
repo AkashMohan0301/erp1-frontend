@@ -1,38 +1,48 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { toggleTheme } from "@/store/uiSlice"
-import { Sun, Moon } from "lucide-react"
+import * as React from "react"
+import { useTheme } from "next-themes"
+
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export function ThemeToggle() {
-  const dispatch = useAppDispatch()
-  const reduxTheme = useAppSelector((state) => state.ui.theme)
-  const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
 
-  // Wait for client mount to prevent hydration mismatch
-  useEffect(() => {
+  // Prevent hydration mismatch
+  React.useEffect(() => {
     setMounted(true)
   }, [])
 
-  const handleToggle = () => {
-    dispatch(toggleTheme())
-  }
-
-  // Don't render until client is ready
-  if (!mounted) {
-    return (
-      <div className="h-9 w-9 rounded-lg bg-slate-200 dark:bg-slate-800" />
-    )
-  }
+  if (!mounted) return null
 
   return (
-    <button
-      onClick={handleToggle}
-      className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all"
-      title={reduxTheme === "dark" ? "Light mode" : "Dark mode"}
-    >
-      {reduxTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          {/* Simple icon via text to avoid extra deps */}
+          <span className="text-sm">
+            {theme === "dark" ? "🌙" : theme === "light" ? "☀️" : "🖥️"}
+          </span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          ☀️ Light
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          🌙 Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          🖥️ System
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

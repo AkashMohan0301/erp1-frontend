@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState ,useEffect } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@/store";
 import {
@@ -9,8 +9,9 @@ import {
   HydrationBoundary,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ThemeSync } from "@/components/ui/themes/ThemeSync";
 import type { DehydratedState } from "@tanstack/react-query";
+
+import { getCsrf } from "@/features/auth/auth.api";
 
 interface ProvidersClientProps {
   children: ReactNode;
@@ -21,6 +22,13 @@ export function ProvidersClient({
   children,
   dehydratedState,
 }: ProvidersClientProps) {
+
+  useEffect(() => {
+    getCsrf().catch(() => {
+      // optional: log / retry
+    });
+  }, []);
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -39,8 +47,6 @@ export function ProvidersClient({
         <HydrationBoundary state={dehydratedState}>
           {children}
         </HydrationBoundary>
-
-        <ThemeSync />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ReduxProvider>

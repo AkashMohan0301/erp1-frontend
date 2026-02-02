@@ -13,12 +13,13 @@ export default function TopBar() {
   const router = useRouter();
   const logoutMutation = useLogout();
 
-  const handleLogout = () => {
-    logoutMutation.mutate(undefined, {
-      onSuccess: () => {
-        router.push("/login");
-      },
-    });
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      router.replace("/login"); // ✅ IMPORTANT
+    } catch {
+      // optional: show toast
+    }
   };
 
   return (
