@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { useTheme } from "next-themes"
-
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -10,6 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import { AppDropdown, type DropdownItem } from "@/components/DropdownMenu"
+import { Laptop, Moon, Sun, SunMoonIcon } from "lucide-react"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
@@ -22,27 +24,29 @@ export function ThemeToggle() {
 
   if (!mounted) return null
 
+  const menuItems: DropdownItem[] = [
+  {
+    type: "item",
+    label: "Light",
+    icon: <Moon className="h-4 w-4" />,
+    onClick: () => setTheme("light"),
+  },
+    {
+    type: "item",
+    label: "Dark",
+    icon: <Sun className="h-4 w-4" />,
+    onClick: () => setTheme("dark"),
+  },
+   {
+    type: "item",
+    label: "System",
+    icon: <Laptop className="h-4 w-4" />,
+    onClick: () => setTheme("system"),
+  },
+]
+
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          {/* Simple icon via text to avoid extra deps */}
-          <span className="text-sm">
-            {theme === "dark" ? "🌙" : theme === "light" ? "☀️" : "🖥️"}
-          </span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          ☀️ Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          🌙 Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          🖥️ System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      <AppDropdown trigger={<Button variant="outline" size="icon"><SunMoonIcon /></Button>} items={menuItems}/>
   )
 }

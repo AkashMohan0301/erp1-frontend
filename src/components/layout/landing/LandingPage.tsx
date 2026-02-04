@@ -2,8 +2,8 @@ import React from 'react'
 
 export default function LandingPage () {
   return (
-        <main className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50">
-      <div className="mx-auto flex min-h-screen w-screen flex-col px-4 sm:px-6 lg:px-8">
+        <main className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 ">
+      <div className="mx-auto flex min-h-screen w-screen flex-col px-4 sm:px-3 lg:px-3">
         {/* Simple Nav */}
         <header className="flex h-14 items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
           <div className="flex items-center gap-2">
@@ -29,7 +29,7 @@ export default function LandingPage () {
         </header>
 
         {/* Hero */}
-        <section className="flex flex-1 flex-col items-start justify-center gap-8 py-12 md:flex-row md:items-center">
+        <section className="flex p-8 flex-1 flex-col items-start justify-center gap-8 py-12 md:flex-row md:items-center">
           <div className="flex-1 space-y-6">
             <p className="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-900/50 px-3 py-1 text-xs font-medium text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
               Modern ERP for growing teams
@@ -37,7 +37,7 @@ export default function LandingPage () {
 
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
               Control your entire{" "}
-              <span className="text-blue-600 dark:text-blue-400">business</span> 
+              <span className="text-blue-600 dark:text-blue-400">Business </span> 
               from one dashboard
             </h1>
 
@@ -52,9 +52,7 @@ export default function LandingPage () {
               >
                 Get Started
               </a>
-              <button className="px-6 py-2.5 border border-slate-300 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
-                View Demo
-              </button>
+
             </div>
           </div>
 
@@ -86,7 +84,7 @@ export default function LandingPage () {
 
         {/* Footer */}
         <footer className="h-12 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between px-4 text-xs text-slate-500 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} ERP1. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} | Pravaha Softwares Private LTD.</p>
           <p>Built with Next.js & Tailwind</p>
         </footer>
       </div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useAppSelector } from "@/store/hooks";
 
-export default function Sidebar() {
+export default function SidebarMain() {
   const sidebarOpen = useAppSelector((state) => state.ui.sidebarOpen);
 
   if (!sidebarOpen) return null;
