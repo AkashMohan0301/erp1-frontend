@@ -9,3 +9,15 @@ export type LoginResponse = {
   accessToken: string;
   expires: string;
 };
+
+export interface AuthContextResponse {
+  userId: number;
+  username: string;
+  companyId: number;
+  unitId: number;
+}
+
+export interface UserUnit {
+  unitId: number;
+  unitName: string;
+}

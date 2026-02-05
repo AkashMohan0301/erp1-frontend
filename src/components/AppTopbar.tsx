@@ -1,7 +1,6 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { toggleSidebar } from "@/store/uiSlice";
+
 import { ThemeToggle } from "@/components/ui/themes/ThemeToggle";
 import { useRouter } from "next/navigation";
 import { useLogout } from "@/features/auth/auth.hooks";
@@ -14,10 +13,13 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 
 export default function TopBar() {
-  const sidebarOpen = useAppSelector((state) => state.ui.sidebarOpen);
 
   const router = useRouter();
   const logoutMutation = useLogout();
+
+
+
+
 
   const handleLogout = async () => {
     try {
@@ -64,9 +66,6 @@ const menuItems: DropdownItem[] = [
          <SidebarTrigger />
         <div>
           <h1 className="text-sm font-semibold">Dashboard</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Demo Corp
-          </p>
         </div>
       </div>
 

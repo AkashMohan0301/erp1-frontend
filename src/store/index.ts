@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit"
-import uiReducer from "./uiSlice"
+import authContextReducer from "./authContextSlice"
 
 export const store = configureStore({
   reducer: {
-    ui: uiReducer
+    authContext: authContextReducer,
   },
 })
 
