@@ -13,9 +13,13 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { SkeletonCard } from "@/components/SkeletonCard";
 
 const AppSidebar = dynamic(
-  () => import("@/components/AppSidebar").then((m) => m.AppSidebar),
-  { ssr: false }
+  () => import("@/components/AppSidebar").then(m => m.AppSidebar),
+  {
+    ssr: false,
+    loading: () => <div className="w-[260px] bg-muted" />
+  }
 );
+
 
 // ============================
 // AUTH GUARD (React Query only)
@@ -30,17 +34,13 @@ function DashboardGuard({ children }: { children: React.ReactNode }) {
     }
   }, [isLoading, isError, data, router]);
 
-  if (isLoading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-white dark:bg-slate-950">
-        <SkeletonCard />
-      </div>
-    );
-  }
+  if (!data && !isLoading) return null;
 
-  if (!data) return null;
-
-  return <>{children}</>;
+  return (
+    <>
+      {isLoading ? <SkeletonCard /> : children}
+    </>
+  );
 }
 
 // ============================
@@ -58,8 +58,8 @@ export default function DashboardRouteLayout({
     <DashboardGuard>
       <SidebarProvider>
         <AppSidebar />
-        <main className="w-full h-screen flex flex-col gap-1">
-          <TopBar />
+        <main className="flex w-full flex-col">
+          <TopBar/>
           <div className="flex-1 overflow-auto">{children}</div>
           <Footer />
         </main>

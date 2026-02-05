@@ -1,11 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Bot,
-  GalleryVerticalEnd,
-  SquareTerminal,
-} from "lucide-react";
+import { GalleryVerticalEnd } from "lucide-react";
 
 import { NavMain } from "@/components/NavMain";
 import { NavUser } from "@/components/NavUser";
@@ -27,37 +23,17 @@ import {
 import { setActiveUnit } from "@/store/authContextSlice";
 import { useUserUnits } from "@/features/auth/auth.hooks";
 
-// --------------------
-// STATIC NAV
-// --------------------
-const navMain = [
-  {
-    title: "Playground",
-    url: "#",
-    icon: SquareTerminal,
-    items: [
-      { title: "History", url: "#" },
-      { title: "Starred", url: "#" },
-      { title: "Settings", url: "#" },
-    ],
-  },
-  {
-    title: "Models",
-    url: "#",
-    icon: Bot,
-    items: [
-      { title: "Genesis", url: "#" },
-      { title: "Explorer", url: "#" },
-      { title: "Quantum", url: "#" },
-    ],
-  },
-];
+import { useMenus } from "@/features/menu/menu.hooks";
+import { mapMenuToNav } from "@/features/menu/menuMapper";
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const dispatch = useAppDispatch();
   const { unitId } = useAppSelector(selectAuthContext);
-  const { data: units, isLoading } = useUserUnits();
 
+  const { data: units, isLoading: unitsLoading } = useUserUnits();
+  const { data: menus, isLoading: menusLoading } = useMenus(unitId);
+
+  const navItems = menus?.map(mapMenuToNav) ?? [];
   const unitItems =
     units?.map((u) => ({
       id: u.unitId,
@@ -68,7 +44,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {isLoading ? (
+        {unitsLoading ? (
           <div className="px-3 py-2 text-sm text-muted-foreground">
             Loading units…
           </div>
@@ -77,15 +53,19 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             items={unitItems}
             activeId={unitId}
             label="Unit"
-            onChange={(id) =>
-              dispatch(setActiveUnit({ unitId: id }))
-            }
+            onChange={(id) => dispatch(setActiveUnit({ unitId: id }))}
           />
         )}
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={navMain} />
+        {menusLoading ? (
+          <div className="px-3 py-2 text-sm text-muted-foreground">
+            Loading menus…
+          </div>
+        ) : (
+          <NavMain items={navItems} />
+        )}
       </SidebarContent>
 
       <SidebarFooter>

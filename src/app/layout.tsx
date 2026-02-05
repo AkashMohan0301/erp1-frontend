@@ -1,6 +1,7 @@
+//path: src/app/layout.tsx
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { ProvidersClient } from "@/components/providers/providersClient";
+import { ProvidersClient } from "@/components/providers/ProvidersClient";
 
 export default function RootLayout({
   children,
