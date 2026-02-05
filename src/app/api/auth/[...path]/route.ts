@@ -1,3 +1,4 @@
+//path src/app/api/auth/[...path]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_API = process.env.BACKEND_API_URL!;
@@ -10,7 +11,7 @@ async function handler(
   // 🔑 IMPORTANT: params IS A PROMISE
   const { path = [] } = await context.params;
 
-  const url = `${BACKEND_API}/auth/${path.join("/")}`;
+  const url = `${BACKEND_API}/api/auth/${path.join("/")}`;
 
 const backendRes = await fetch(url, {
   method: req.method,

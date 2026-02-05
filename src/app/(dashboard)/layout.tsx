@@ -6,11 +6,18 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/features/auth/auth.hooks";
 
-import Footer from "@/components/layout/dashboard/Footer";
-import Sidebar from "@/components/layout/dashboard/SideBar";
-import TopBar from "@/components/layout/dashboard/Topbar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import Footer from "@/components/AppFooter";
+import TopBar from "@/components/AppTopbar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+
+import dynamic from "next/dynamic";
+
+const AppSidebar = dynamic(
+  () => import("@/components/AppSidebar").then((m) => m.AppSidebar),
+  { ssr: false }
+);
+
+
 
 function DashboardGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -41,6 +48,7 @@ export default function DashboardRouteLayout({
   children: React.ReactNode;
 }) {
   return (
+    <DashboardGuard>
     <SidebarProvider>
       <AppSidebar />
       <main className="w-full h-screen flex flex-col gap-1">
@@ -51,18 +59,7 @@ export default function DashboardRouteLayout({
         <Footer />
       </main>
     </SidebarProvider>
+   </DashboardGuard>
 
-    // <DashboardGuard>
-    //   <main className="flex min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50">
-    //
-    //     <div className="flex flex-1 flex-col min-h-screen">
-
-    //       <main className="flex-1 p-6 overflow-auto bg-gray-50 dark:bg-slate-900">
-    //         {children}
-    //       </main>
-
-    //     </div>
-    //   </main>
-    // </DashboardGuard>
   );
 }
