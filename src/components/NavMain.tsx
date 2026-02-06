@@ -1,110 +1,111 @@
-"use client";
+"use client"
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
-import Link from "next/link";
+import {
+  ChevronRight,
+  Folder,
+  FolderOpen,
+  type LucideIcon,
+} from "lucide-react"
+import Link from "next/link"
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@/components/ui/collapsible"
+
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar"
 
-// ----------------------------------
-// TYPES
-// ----------------------------------
+/* ----------------------------------
+   TYPES
+---------------------------------- */
 export type NavItem = {
-  title: string;
-  url?: string;
-  icon?: LucideIcon;
-  isActive?: boolean;
-  items?: NavItem[];
-};
+  title: string
+  url?: string
+  icon?: LucideIcon
+  isActive?: boolean
+  items?: NavItem[]
+}
 
-// ----------------------------------
-// COMPONENT
-// ----------------------------------
+/* ----------------------------------
+   RECURSIVE RENDERER
+---------------------------------- */
+function RenderNavItem({ item }: { item: NavItem }) {
+  const hasChildren = !!item.items?.length
+
+  /* ========== LEAF ========== */
+  if (!hasChildren) {
+    return (
+      <SidebarMenuSubItem>
+        <SidebarMenuSubButton asChild>
+          {item.url ? (
+            <Link href={item.url}>
+              <span>{item.title}</span>
+            </Link>
+          ) : (
+            <span className="opacity-60">{item.title}</span>
+          )}
+        </SidebarMenuSubButton>
+      </SidebarMenuSubItem>
+    )
+  }
+
+  /* ========== PARENT ========== */
+  return (
+    <SidebarMenuItem>
+      <Collapsible
+        defaultOpen={item.isActive}
+        className="
+          group/collapsible
+          [&[data-state=open]>button>svg.chevron]:rotate-90
+          [&[data-state=open]>button>svg.folder-closed]:hidden
+          [&[data-state=open]>button>svg.folder-open]:block
+        "
+      >
+        <CollapsibleTrigger asChild>
+          <SidebarMenuButton>
+            {/* Chevron */}
+            <ChevronRight className="chevron transition-transform" />
+
+            {/* Folder icons */}
+            <Folder className="folder-closed" />
+            <FolderOpen className="folder-open hidden" />
+
+            <span>{item.title}</span>
+          </SidebarMenuButton>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <SidebarMenuSub>
+            {item.items!.map((child) => (
+              <RenderNavItem key={child.title} item={child} />
+            ))}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </Collapsible>
+    </SidebarMenuItem>
+  )
+}
+
+/* ----------------------------------
+   MAIN COMPONENT
+---------------------------------- */
 export function NavMain({ items }: { items: NavItem[] }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
-
       <SidebarMenu>
-        {items.map((item) => {
-          const hasChildren = !!item.items?.length;
-
-          // ==================================================
-          // 1️⃣ PARENT MENU → DROPDOWN
-          // ==================================================
-          if (hasChildren) {
-            return (
-              <Collapsible
-                key={item.title}
-                asChild
-                defaultOpen={item.isActive}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items!.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            {subItem.url ? (
-                              <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            ) : (
-                              <span className="opacity-60">
-                                {subItem.title}
-                              </span>
-                            )}
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-            );
-          }
-
-          // ==================================================
-          // 2️⃣ LEAF MENU → CLICKABLE
-          // ==================================================
-          return (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                {item.url ? (
-                  <Link href={item.url}>
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                  </Link>
-                ) : (
-                  <span className="opacity-60">{item.title}</span>
-                )}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          );
-        })}
+        {items.map((item) => (
+          <RenderNavItem key={item.title} item={item} />
+        ))}
       </SidebarMenu>
     </SidebarGroup>
-  );
+  )
 }
