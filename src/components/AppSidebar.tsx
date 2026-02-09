@@ -16,10 +16,12 @@ import {
 } from "@/components/ui/sidebar";
 
 import {
-  selectAuthContext,
   useAppDispatch,
   useAppSelector,
 } from "@/store/hooks";
+
+import { selectAuthContext } from "@/store/authContextSlice";
+
 import { setActiveUnit } from "@/store/authContextSlice";
 import { useUserUnits } from "@/features/auth/auth.hooks";
 
@@ -68,7 +70,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         )}
       </SidebarContent>
 
-      <SidebarFooter>
+      {/* <SidebarFooter>
         <NavUser
           user={{
             name: "System User",
@@ -76,7 +78,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             avatar: "/avatars/default.png",
           }}
         />
-      </SidebarFooter>
+      </SidebarFooter> */}
 
       <SidebarRail />
     </Sidebar>

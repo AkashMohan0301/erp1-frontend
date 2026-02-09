@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
-import type { RootState, AppDispatch } from "."
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import type { RootState, AppDispatch } from "./index";
 
-export const selectAuthContext = (state: RootState) =>state.authContext;
-export const useAppDispatch = () => useDispatch<AppDispatch>()
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-
+// ✅ Hooks only
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
