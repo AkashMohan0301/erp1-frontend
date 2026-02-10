@@ -86,17 +86,20 @@ export function useUserUnits() {
   });
 }
 
-
 export function useRestoreUnit() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const savedUnitId = localStorage.getItem("activeUnitId");
+    const match = document.cookie
+      .split("; ")
+      .find(c => c.startsWith("activeUnitId="));
 
-    if (savedUnitId) {
-      dispatch(
-        setActiveUnit({ unitId: Number(savedUnitId) })
-      );
+    if (!match) return;
+
+    const unitId = Number(match.split("=")[1]);
+
+    if (!Number.isNaN(unitId)) {
+      dispatch(setActiveUnit({ unitId }));
     }
   }, [dispatch]);
 }

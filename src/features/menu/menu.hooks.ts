@@ -1,3 +1,4 @@
+//path:src/features/menu/menu.hooks.ts
 import { useQuery } from "@tanstack/react-query";
 import { getMenus } from "./menu.api";
 

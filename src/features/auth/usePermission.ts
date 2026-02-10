@@ -1,3 +1,4 @@
+//path:src/features/auth/usePermission.ts
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 

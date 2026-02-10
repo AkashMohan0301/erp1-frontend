@@ -55,7 +55,12 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             items={unitItems}
             activeId={unitId}
             label="Unit"
-            onChange={(id) => dispatch(setActiveUnit({ unitId: id }))}
+            onChange={(id) => {
+                                  dispatch(setActiveUnit({ unitId: id }));
+
+                                  // Persist last active unit
+                                  document.cookie = `activeUnitId=${id}; path=/; SameSite=Lax`;
+                                }}
           />
         )}
       </SidebarHeader>

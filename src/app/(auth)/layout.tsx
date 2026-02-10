@@ -1,5 +1,4 @@
-"use client";
-
+//path : src/app/%28auth%29/layout.tsx
 export default function AuthLayout({
   children,
 }: {

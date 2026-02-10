@@ -1,9 +1,4 @@
-import TestUnitSwitch from "@/components/TestComponent";
-
+// app/(main)/customer/page.tsx
 export default function CustomerPage() {
-  return (
-    <div className="p-4">
-      <h1 className="text-xl font-semibold">Customer Master</h1>
-    </div>
-  );
+  return <div>Customer</div>;
 }
