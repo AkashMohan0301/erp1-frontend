@@ -2,36 +2,64 @@ export type FieldType =
   | "text"
   | "number"
   | "select"
-  | "checkbox"
-  | "textarea"
+  | "textarea";
+
+/* =========================================================
+   SELECT OPTION
+========================================================= */
 
 export type SelectOption = {
-  label: string
-  value: string | number
+  label: string;
+  value: string | number;
+};
+
+/* =========================================================
+   UI CONFIG
+========================================================= */
+
+export interface FieldUIConfig {
+  wrapperClass?: string;
+  labelClass?: string;
+  inputClass?: string;
+  errorClass?: string;
+  hidden?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-export type FieldUIConfig = {
-  wrapperClass?: string
-  labelClass?: string
-  inputClass?: string
-  errorClass?: string
+/* =========================================================
+   DATA SOURCE (GENERIC + SAFE)
+========================================================= */
 
-  hidden?: boolean
-  disabled?: boolean
-  readOnly?: boolean
+export interface DataSourceConfig<
+  T extends Record<string, any>
+> {
+  endpoint: string;
+
+  // 🔥 only string keys allowed
+  dependsOn?: (Extract<keyof T, string>)[];
+
+  valueKey?: string;
+  labelKey?: string;
 }
 
+/* =========================================================
+   MAIN FIELD CONFIG (GENERIC)
+========================================================= */
 
-export type FormFieldConfig = {
-  name: string
-  label: string
-  type: FieldType
+export interface FormFieldConfig<
+  T extends Record<string, any>
+> {
+  name: Extract<keyof T, string>;   // 🔥 string-only keys
 
-  ui?: FieldUIConfig
+  label: string;
+  type: FieldType;
 
-  // for select (static only in Step 3)
-  options?: SelectOption[]
+  options?: SelectOption[];
+  dataSource?: DataSourceConfig<T>;
 
-  placeholder?: string
-  defaultValue?: any
+  placeholder?: string;
+  ui?: FieldUIConfig;
+
+  editableOnEdit?: boolean;
 }

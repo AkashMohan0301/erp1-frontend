@@ -5,7 +5,7 @@ import Footer from "@/components/AppFooter";
 import TopBar from "@/components/AppTopbar";
 import { MainLayoutGuard } from "@/components/MainLayoutGuard";
 import dynamic from "next/dynamic";
-import { useRestoreUnit } from "@/features/auth/auth.hooks";
+import { useRestoreUnit } from "@/features/auth/authHooks";
 
 const AppSidebar = dynamic(
   () => import("@/components/AppSidebar").then(m => m.AppSidebar),
@@ -19,16 +19,24 @@ export default function MainLayoutClient({
 }) {
       useRestoreUnit(); 
 
-  return (
-    <MainLayoutGuard>
-      <SidebarProvider>
+return (
+  <MainLayoutGuard>
+    <SidebarProvider>
+      <div className="flex h-screen w-screen"> {/* important */}
         <AppSidebar />
-        <main className="flex w-full flex-col">
+
+        <main className="flex flex-1 flex-col">
           <TopBar />
-          <div className="flex-1 overflow-auto">{children}</div>
+
+          {/* Scrollable area */}
+          <div className="flex-1 overflow-y-auto">
+            {children}
+          </div>
+
           <Footer />
         </main>
-      </SidebarProvider>
-    </MainLayoutGuard>
-  );
+      </div>
+    </SidebarProvider>
+  </MainLayoutGuard>
+);
 }

@@ -1,4 +1,4 @@
-import type { MenuNode } from "./menu";
+import type { MenuNode } from "./menuType";
 
 export function flattenMenus(menus: MenuNode[] = []): MenuNode[] {
   const result: MenuNode[] = [];

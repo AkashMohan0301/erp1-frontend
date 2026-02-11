@@ -1,4 +1,4 @@
-import type { MenuNode } from "./menu";
+import type { MenuNode } from "./menuType";
 import type { NavItem } from "./nav";
 
 

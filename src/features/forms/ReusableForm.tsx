@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 
 import { Input } from "@/components/ui/input";
@@ -17,25 +17,31 @@ import {
 import { FORM_DEFAULT_CSS } from "./formDefaultCss";
 import { FormFieldConfig } from "./formsType";
 
-interface ReusableFormProps {
-  fields: FormFieldConfig[];
+/* =========================================================
+   PROPS
+========================================================= */
+
+interface ReusableFormProps<T extends Record<string, any>> {
+  fields: FormFieldConfig<T>[];
+  values: T;
+  onChange: (data: T) => void;
+  errors?: Partial<Record<keyof T, string>>;
   className?: string;
-  onChange?: (data: Record<string, any>) => void;
-  errors?: Record<string, string>;
 }
 
-export function ReusableForm({
+/* =========================================================
+   COMPONENT
+========================================================= */
+
+export function ReusableForm<T extends Record<string, any>>({
   fields,
   className,
+  values,
   onChange,
   errors,
-}: ReusableFormProps) {
-  const [formData, setFormData] = useState<Record<string, any>>({});
-
-  function updateField(name: string, value: any) {
-    const next = { ...formData, [name]: value };
-    setFormData(next);
-    onChange?.(next);
+}: ReusableFormProps<T>) {
+  function updateField<K extends keyof T>(name: K, value: T[K]) {
+    onChange({ ...values, [name]: value });
   }
 
   return (
@@ -45,15 +51,20 @@ export function ReusableForm({
 
         const hasError = Boolean(errors?.[field.name]);
 
+        const inputClass = clsx(
+          FORM_DEFAULT_CSS.inputClass,
+          hasError && FORM_DEFAULT_CSS.errorInputClass,
+          field.ui?.inputClass
+        );
+
         return (
           <div
-            key={field.name}
+            key={String(field.name)}
             className={clsx(
               FORM_DEFAULT_CSS.wrapperClass,
               field.ui?.wrapperClass
             )}
           >
-            {/* Label */}
             <Label
               className={clsx(
                 FORM_DEFAULT_CSS.labelClass,
@@ -63,10 +74,14 @@ export function ReusableForm({
               {field.label}
             </Label>
 
-            {/* Input */}
-            {renderField(field, formData[field.name], updateField, hasError)}
+            {renderField<T>(
+              field,
+              values,
+              values[field.name],
+              inputClass,
+              updateField
+            )}
 
-            {/* Error message */}
             {hasError && (
               <div
                 className={clsx(
@@ -84,74 +99,145 @@ export function ReusableForm({
   );
 }
 
-/* -------------------------------------------------------
-   Field Renderer (NO layout or logic assumptions)
--------------------------------------------------------- */
+/* =========================================================
+   FIELD RENDERER
+========================================================= */
 
-function renderField(
-  field: FormFieldConfig,
+function renderField<T extends Record<string, any>>(
+  field: FormFieldConfig<T>,
+  values: T,
   value: any,
-  onChange: (name: string, value: any) => void,
-  hasError: boolean
+  inputClass: string,
+  onChange: <K extends keyof T>(name: K, value: T[K]) => void
 ) {
-  const inputClass = clsx(
-    FORM_DEFAULT_CSS.inputClass,
-    hasError && FORM_DEFAULT_CSS.errorInputClass,
-    field.ui?.inputClass
-  );
-
   switch (field.type) {
     case "text":
     case "number":
       return (
         <Input
           type={field.type}
+          value={value ?? ""}
           className={inputClass}
           placeholder={field.placeholder}
-          defaultValue={field.defaultValue}
           disabled={field.ui?.disabled}
           readOnly={field.ui?.readOnly}
-          onChange={(e) => onChange(field.name, e.target.value)}
+          onChange={(e) =>
+            onChange(field.name, e.target.value as any)
+          }
         />
       );
 
     case "textarea":
       return (
         <Textarea
+          value={value ?? ""}
           className={inputClass}
           placeholder={field.placeholder}
-          defaultValue={field.defaultValue}
           disabled={field.ui?.disabled}
           readOnly={field.ui?.readOnly}
-          onChange={(e) => onChange(field.name, e.target.value)}
+          onChange={(e) =>
+            onChange(field.name, e.target.value as any)
+          }
         />
       );
 
     case "select":
-      return (
-        <Select
-          defaultValue={field.defaultValue}
-          disabled={field.ui?.disabled}
-          onValueChange={(v) => onChange(field.name, v)}
-        >
-          <SelectTrigger className={inputClass}>
-            <SelectValue placeholder={field.placeholder} />
-          </SelectTrigger>
-
-          <SelectContent>
-            {field.options?.map((opt) => (
-              <SelectItem
-                key={opt.value}
-                value={String(opt.value)}
-              >
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      return renderSelectField<T>(
+        field,
+        values,
+        value,
+        inputClass,
+        onChange
       );
 
     default:
       return null;
   }
+}
+
+/* =========================================================
+   SELECT FIELD (STATIC + DYNAMIC SUPPORT)
+========================================================= */
+
+function renderSelectField<T extends Record<string, any>>(
+  field: FormFieldConfig<T>,
+  values: T,
+  value: any,
+  inputClass: string,
+  onChange: <K extends keyof T>(name: K, value: T[K]) => void
+) {
+  const hasDynamic = Boolean(field.dataSource);
+
+  let options = field.options ?? [];
+  let disabled = field.ui?.disabled ?? false;
+
+  if (hasDynamic) {
+    const { endpoint, dependsOn } = field.dataSource!;
+
+    const isReady =
+      !dependsOn ||
+      dependsOn.every((dep) => values[dep]);
+
+    const finalEndpoint = buildEndpoint(
+      endpoint,
+      dependsOn,
+      values
+    );
+
+    const { data, isLoading } = useQuery({
+      queryKey: [finalEndpoint],
+      queryFn: async () => {
+        const res = await fetch(finalEndpoint);
+        if (!res.ok) throw new Error("Failed to load options");
+        return res.json();
+      },
+      enabled: isReady,
+    });
+
+    options = data ?? [];
+    disabled = disabled || !isReady || isLoading;
+  }
+
+  return (
+    <Select
+      value={value ?? ""}
+      disabled={disabled}
+      onValueChange={(v) =>
+        onChange(field.name, v as any)
+      }
+    >
+      <SelectTrigger className={inputClass}>
+        <SelectValue placeholder={field.placeholder} />
+      </SelectTrigger>
+
+      <SelectContent>
+        {options.map((opt: any) => (
+          <SelectItem
+            key={opt.value ?? opt.id}
+            value={String(opt.value ?? opt.id)}
+          >
+            {opt.label ?? opt.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+/* =========================================================
+   HELPER
+========================================================= */
+
+function buildEndpoint(
+  base: string,
+  dependsOn: string[] | undefined,
+  values: Record<string, any>
+) {
+  if (!dependsOn || dependsOn.length === 0) return base;
+
+  const params = dependsOn
+    .map((key) => `${key}=${values[key]}`)
+    .join("&");
+
+  return `${base}?${params}`;
 }

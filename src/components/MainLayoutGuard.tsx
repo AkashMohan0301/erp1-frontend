@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useMenus } from "@/features/menu/menu.hooks";
+import { useMenus } from "@/features/menu/menuHooks";
 import { useAppSelector } from "@/store/hooks";
 import { selectUnitId } from "@/store/authContextSlice";
 import { SkeletonCard } from "@/components/SkeletonCard";

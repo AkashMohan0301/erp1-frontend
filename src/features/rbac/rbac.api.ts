@@ -1,4 +1,5 @@
-import { MenuAction } from "./rbac"
+//path:src/features/rbac/rbac.api.ts
+import { MenuAction } from "./rbacTypes"
 
 export async function fetchMenuActions(menuId: number): Promise<MenuAction[]> {
   const res = await fetch(`/api/rbac/menu-actions/${menuId}`, {

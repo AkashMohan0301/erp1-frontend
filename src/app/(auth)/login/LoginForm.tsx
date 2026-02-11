@@ -2,7 +2,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useLogin } from "@/features/auth/auth.hooks";
+import { useLogin } from "@/features/auth/authHooks";
 import { useFormError } from "@/hooks/useFormError";
 import { FormError } from "@/components/ui/PopupMessage";
 import InputField from "@/components/ui/InputField";

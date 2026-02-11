@@ -1,4 +1,4 @@
-import { useMenus } from "@/features/menu/menu.hooks";
+import { useMenus } from "@/features/menu/menuHooks";
 import { useAppSelector } from "@/store/hooks";
 import { selectUnitId } from "@/store/authContextSlice";
 import { useRouter } from "next/navigation";

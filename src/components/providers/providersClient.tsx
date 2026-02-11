@@ -1,17 +1,19 @@
 "use client";
 
-import { ReactNode, useState ,useEffect } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@/store";
+
 import {
   QueryClient,
   QueryClientProvider,
   HydrationBoundary,
 } from "@tanstack/react-query";
+
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { DehydratedState } from "@tanstack/react-query";
 
-import { getCsrf } from "@/features/auth/auth.api";
+import { apiQueries } from "@/features/auth/authApiQueries";
 
 interface ProvidersClientProps {
   children: ReactNode;
@@ -22,13 +24,6 @@ export function ProvidersClient({
   children,
   dehydratedState,
 }: ProvidersClientProps) {
-
-  useEffect(() => {
-    getCsrf().catch(() => {
-      // optional: log / retry
-    });
-  }, []);
-
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -40,6 +35,11 @@ export function ProvidersClient({
         },
       })
   );
+
+  // CSRF 
+  useEffect(() => {
+    queryClient.prefetchQuery(apiQueries.csrf());
+  }, [queryClient]);
 
   return (
     <ReduxProvider store={store}>

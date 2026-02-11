@@ -20,17 +20,17 @@ import {
   useAppSelector,
 } from "@/store/hooks";
 
-import { selectAuthContext } from "@/store/authContextSlice";
+import { selectUnitId } from "@/store/authContextSlice";
 
 import { setActiveUnit } from "@/store/authContextSlice";
-import { useUserUnits } from "@/features/auth/auth.hooks";
+import { useUserUnits } from "@/features/auth/authHooks";
 
-import { useMenus } from "@/features/menu/menu.hooks";
+import { useMenus } from "@/features/menu/menuHooks";
 import { mapMenuToNav } from "@/features/menu/menuMapper";
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const dispatch = useAppDispatch();
-  const { unitId } = useAppSelector(selectAuthContext);
+  const unitId = useAppSelector(selectUnitId);
 
   const { data: units, isLoading: unitsLoading } = useUserUnits();
   const { data: menus, isLoading: menusLoading } = useMenus(unitId);

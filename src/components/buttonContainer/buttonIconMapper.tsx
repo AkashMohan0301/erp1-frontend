@@ -10,7 +10,7 @@ export function mapIcon(buttonCode: string) {
   switch (buttonCode) {
     case "SAVE":
       return <Save className="h-4 w-4" />
-    case "UPDATE":
+    case "EDIT":
       return <Pencil className="h-4 w-4" />
     case "DELETE":
       return <Trash2 className="h-4 w-4" />

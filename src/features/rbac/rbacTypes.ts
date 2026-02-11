@@ -1,3 +1,4 @@
+// path:src/features/rbac/rbac.ts
 export type MenuAction = {
   buttonCode: string
   label: string

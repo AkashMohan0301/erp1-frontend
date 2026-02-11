@@ -9,7 +9,7 @@ export const api = axios.create({
 });
 
 /* ============================
-   REQUEST INTERCEPTOR (YOURS)
+   REQUEST INTERCEPTOR 
 ============================ */
 api.interceptors.request.use((config) => {
   const state = store.getState();
@@ -21,7 +21,7 @@ api.interceptors.request.use((config) => {
     config.headers["X-UNIT-ID"] = unitId.toString();
   }
 
-  // CSRF (non-GET)
+  // CSRF 
   const method = config.method?.toUpperCase();
   if (method && method !== "GET") {
     const match = document.cookie.match(/(?:^|; )csrf_token=([^;]+)/);

@@ -3,7 +3,7 @@
 
 import { ThemeToggle } from "@/components/ui/themes/ThemeToggle";
 import { useRouter } from "next/navigation";
-import { useLogout } from "@/features/auth/auth.hooks";
+import { useLogout } from "@/features/auth/authHooks";
 import { DropdownItem } from "@/components/DropdownMenu";
 import { AppDropdown } from "@/components/DropdownMenu";
 import { Button } from "@/components/ui/button"

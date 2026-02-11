@@ -14,19 +14,21 @@ interface Props {
   children: ReactNode;
 }
 
-export function RBACActionContainer({ menuId, onAction, children }: Props) {
-  const { data, isLoading, isError } = useQuery({
+export function ButtonContainer({
+  menuId,
+  onAction,
+  children,
+}: Props) {
+  const { data, isLoading } = useQuery({
     queryKey: ["menu-actions", menuId],
     queryFn: () => fetchMenuActions(menuId),
   });
 
-  if (isLoading) return null;
-  if (isError) return null;
-
   return (
     <div className="space-y-4">
-      {/* ACTION BAR */}
-      <div className="flex gap-2 justify-end">
+      <div className="flex gap-2 justify-end overflow-y">
+        {isLoading && <span>Loading...</span>}
+
         {data?.map((btn) => (
           <Button
             key={btn.buttonCode}
@@ -40,7 +42,6 @@ export function RBACActionContainer({ menuId, onAction, children }: Props) {
         ))}
       </div>
 
-      {/* CONTENT */}
       <div>{children}</div>
     </div>
   );
