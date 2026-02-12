@@ -8,8 +8,8 @@ export interface ApiResponse<T> {
 }
 
 export interface ApiError {
-  correlationId: string;
-  code: string;
-  message: string;
+  correlationId?: string;
+  code?: string;
+  message?: string;
   details?: Record<string, string[]>;
 }

@@ -1,3 +1,4 @@
+//path : src/features/company/companyHooks.ts
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { companyApiMutations } from "./companyApiMutations";
 import { companyApiQueries } from "./companyApiQueries";

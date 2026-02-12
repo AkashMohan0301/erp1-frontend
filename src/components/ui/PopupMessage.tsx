@@ -1,51 +1,66 @@
-import { useEffect, useState } from "react";
+"use client";
 
-type Props = {
+import { useState, useEffect } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+type Variant = "error" | "success" | "warning" | "info";
+
+interface PopupMessageProps {
   message?: string;
-};
+  variant?: Variant;
+  autoClose?: number; // milliseconds
+  className?: string;
+}
 
-export function FormError({ message }: Props) {
-  const [open, setOpen] = useState(false);
+export function PopupMessage({
+  message,
+  variant = "error",
+  autoClose,
+  className,
+}: PopupMessageProps) {
+  const [visible, setVisible] = useState(Boolean(message));
 
   useEffect(() => {
-    if (!message) return;
-
-    setOpen(true); 
-
-    const timer = setTimeout(() => {
-      setOpen(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
+    setVisible(Boolean(message));
   }, [message]);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (!autoClose || !visible) return;
+
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, autoClose);
+
+    return () => clearTimeout(timer);
+  }, [autoClose, visible]);
+
+  if (!visible || !message) return null;
+
+  const variantStyles: Record<Variant, string> = {
+    error: "border-red-300 bg-red-50 text-red-800",
+    success: "border-green-300 bg-green-50 text-green-800",
+    warning: "border-yellow-300 bg-yellow-50 text-yellow-800",
+    info: "border-blue-300 bg-blue-50 text-blue-800",
+  };
 
   return (
-    <div
-      className="
-        fixed top-4 right-4 z-50
-        w-[320px]
-        p-4 pr-10
-        text-sm rounded-lg border
-        text-red-600 bg-red-50 border-red-200
-        dark:bg-red-950 dark:border-red-800
-        animate-slide-in
-      "
+    <Alert
+      className={cn(
+        "relative flex items-start justify-between",
+        variantStyles[variant],
+        className
+      )}
     >
-      {message}
+      <AlertDescription>{message}</AlertDescription>
 
-      {/* Close button */}
       <button
-        onClick={() => setOpen(false)}
-        className="
-          absolute top-2 right-2
-          text-red-500 hover:text-red-700
-        "
-        aria-label="Close error"
+        onClick={() => setVisible(false)}
+        className="ml-4 text-sm opacity-70 hover:opacity-100"
       >
-        ✕
+        <X size={16} />
       </button>
-    </div>
+    </Alert>
   );
 }

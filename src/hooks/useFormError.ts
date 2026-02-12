@@ -1,48 +1,38 @@
 import { useMemo } from "react";
-import type { AxiosError } from "axios";
-import type { ApiError } from "@/types/api";
+import axios from "axios";
 
-export function useFormError(error: unknown) {
+interface NormalizedError {
+  message: string;
+  fieldErrors: Record<string, string[]>;
+  code?: string;
+}
+
+export function useFormError(error: unknown): NormalizedError {
   return useMemo(() => {
-    if (!error) {
+    if (!error || !axios.isAxiosError(error)) {
       return {
         message: "",
-        fieldErrors: {} as Record<string, string[]>,
-        code: undefined,
-        correlationId: undefined,
+        fieldErrors: {},
       };
     }
 
-    const axiosError = error as AxiosError;
-    const data = axiosError.response?.data;
+    const data = error.response?.data;
 
-    // ApiErrorResponse from backend
-    if (typeof data === "object" && data !== null) {
-      const apiError = data as ApiError;
-
+    // Ensure object
+    if (data && typeof data === "object") {
       return {
-        message: apiError.message ?? "",
-        fieldErrors: apiError.details ?? {},
-        code: apiError.code,
-        correlationId: apiError.correlationId,
-      };
-    }
-
-    // Plain-text errors (429, infra)
-    if (typeof data === "string") {
-      return {
-        message: data,
-        fieldErrors: {} as Record<string, string[]>,
-        code: axiosError.code,
-        correlationId: undefined,
+        message: data.message ?? "",
+        fieldErrors:
+          data.details && typeof data.details === "object"
+            ? data.details
+            : {},
+        code: data.code,
       };
     }
 
     return {
-      message: "Something went wrong. Please try again.",
-      fieldErrors: {} as Record<string, string[]>,
-      code: axiosError.code,
-      correlationId: undefined,
+      message: "",
+      fieldErrors: {},
     };
   }, [error]);
 }

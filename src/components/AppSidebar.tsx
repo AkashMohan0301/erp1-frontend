@@ -2,15 +2,13 @@
 
 import * as React from "react";
 import { GalleryVerticalEnd } from "lucide-react";
-
 import { NavMain } from "@/components/NavMain";
-import { NavUser } from "@/components/NavUser";
 import { TeamSwitcher } from "./UnitSwitcher";
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
+
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";

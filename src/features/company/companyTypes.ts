@@ -1,3 +1,4 @@
+// path: src/features/company/companyTypes.ts
 export interface CompanyDto {
   companyId?: number;
   companyName: string;

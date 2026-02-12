@@ -38,12 +38,6 @@ export function MainLayoutGuard({
         router.replace("/403");
       }
     }
-
-  console.log("UNIT:", unitId);
-  console.log("PATH:", pathname);
-  console.log("MENUS:", menus);
-
-
   }, [unitId, isLoading, isFetching, menus, pathname, router]);
 
   // ⛔ Block UI until context is ready
