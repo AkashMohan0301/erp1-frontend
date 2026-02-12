@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_API = process.env.BACKEND_API_URL!;
-// Example: http://localhost:5168
 
 async function handler(
   req: NextRequest,
@@ -11,22 +10,16 @@ async function handler(
 ) {
   const { path = [] } = await context.params;
 
-  // Build backend URL
-  const url = `${BACKEND_API}/api/${path.join("/")}`;
+  const search = req.nextUrl.search;
 
-  const backendRes = await fetch(url, {
+  const backendUrl =
+    `${BACKEND_API}/api/${path.join("/")}${search}`;
+
+  const backendRes = await fetch(backendUrl, {
     method: req.method,
     headers: {
-      "Content-Type": "application/json",
-
-      // Forward cookies (auth)
-      cookie: req.headers.get("cookie") ?? "",
-
-      // Forward CSRF
-      "X-CSRF-Token": req.headers.get("x-csrf-token") ?? "",
-
-      // Forward Unit context
-      "X-UNIT-ID": req.headers.get("x-unit-id") ?? "",
+      ...Object.fromEntries(req.headers.entries()),
+      host: undefined as any, // prevent host override issues
     },
     body:
       req.method === "GET" || req.method === "HEAD"
@@ -41,4 +34,4 @@ async function handler(
   });
 }
 
-export { handler as GET, handler as POST, handler as PUT, handler as DELETE };
+export { handler as GET, handler as POST, handler as PUT, handler as DELETE, handler as PATCH };

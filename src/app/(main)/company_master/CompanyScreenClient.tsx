@@ -1,17 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ButtonContainer } from "@/components/buttonContainer/ButtonContainer";
-import { ReusableForm } from "@/features/forms/ReusableForm";
-import { FormFieldConfig } from "@/features/forms/formsType";
-import { useCompany, useSaveCompany } from "@/features/company/companyHooks";
-import type { CompanyDto } from "@/features/company/companyTypes";
+import { FormBuilder } from "@/features/forms/FormBuilder";
+import type { FormFieldConfig, FormMode } from "@/features/forms/formTypes";
+import { api } from "@/lib/api";
+import { companySearchConfig } from "./companySearchConfig";
 
-export default function CompanyScreenClient() {
-  // ============================
-  // STATE (STRICTLY TYPED)
-  // ============================
-  const [formData, setFormData] = useState<CompanyDto>({
+interface CompanyDto {
+  companyId?: number;
+  companyName: string;
+  address: string;
+  city: string;
+  stateCode: string;
+  countryCode: string;
+  customerShortName: string;
+  contactNo?: string;
+  emailId?: string;
+  status: string;
+}
+
+export default function CompanyMaster() {
+  const [mode, setMode] = useState<FormMode>("CREATE");
+
+  const [values, setValues] = useState<CompanyDto>({
     companyName: "",
     address: "",
     city: "",
@@ -23,182 +35,138 @@ export default function CompanyScreenClient() {
     status: "A",
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [mode, setMode] = useState<"create" | "view" | "edit">("create");
-  const [selectedId, setSelectedId] = useState<number | undefined>();
+  async function loadCompany(id: number) {
+    const res = await api.get(`/company/${id}`);
+    setValues(res.data.data);
+    setMode("VIEW");
+  }
 
-  const { data } = useCompany(selectedId);
-  const saveMutation = useSaveCompany();
+  async function handleSave(val: CompanyDto) {
+    const res = await api.post("/company", val);
+    setValues(res.data.data);
+    setMode("VIEW");
+  }
 
-  // ============================
-  // LOAD DATA INTO FORM
-  // ============================
-  useEffect(() => {
-    if (data && mode === "view") {
-      setFormData(data);
-    }
-  }, [data, mode]);
-
-  // ============================
-  // FIELD CONFIG
-  // ============================
-  const baseFields: FormFieldConfig<CompanyDto>[] = [
+  const fields: FormFieldConfig<CompanyDto>[] = [
     {
       name: "companyId",
-      label: "Company ID",
-      type: "text",
+      label: "Search Company",
+      type: "lookup",
+      colSpan: 6,
       editableOnEdit: false,
-      ui: { wrapperClass: "col-span-12" },
+      hideOnView: mode === "VIEW",
+      lookupConfig: companySearchConfig,
     },
     {
       name: "companyName",
       label: "Company Name",
       type: "text",
-      ui: { wrapperClass: "col-span-12" },
+      required: true,
+      colSpan: 6,
     },
     {
       name: "customerShortName",
       label: "Short Name",
       type: "text",
-      ui: { wrapperClass: "col-span-12" },
+      required: true,
+      colSpan: 6,
     },
     {
       name: "address",
       label: "Address",
       type: "textarea",
-      ui: { wrapperClass: "col-span-6 " },
+      required: true,
+      colSpan: 12,
     },
     {
       name: "city",
       label: "City",
       type: "text",
-      ui: { wrapperClass: "col-span-6" },
+      required: true,
+      colSpan: 6,
     },
     {
       name: "stateCode",
       label: "State",
       type: "select",
+      required: true,
+      colSpan: 3,
       options: [
         { label: "Tamil Nadu", value: "TN" },
         { label: "Karnataka", value: "KA" },
       ],
-      ui: { wrapperClass: "col-span-6" },
     },
     {
       name: "countryCode",
       label: "Country",
       type: "select",
+      required: true,
+      colSpan: 3,
       options: [{ label: "India", value: "IN" }],
-      ui: { wrapperClass: "col-span-6" },
     },
     {
       name: "contactNo",
       label: "Contact No",
       type: "text",
-      ui: { wrapperClass: "col-span-6 " },
+      colSpan: 6,
     },
     {
       name: "emailId",
       label: "Email",
       type: "text",
-      ui: { wrapperClass: "col-span-6" },
+      colSpan: 6,
     },
     {
       name: "status",
       label: "Status",
       type: "select",
+      colSpan: 3,
       options: [
         { label: "Active", value: "A" },
         { label: "Inactive", value: "I" },
       ],
-      ui: { wrapperClass: "col-span-6 " },
     },
   ];
 
-  // ============================
-  // LOCKING LOGIC
-  // ============================
-  const computedFields = baseFields.map((field) => {
-    const isView = mode === "view";
-    const isEdit = mode === "edit";
-    const locked = isEdit && field.editableOnEdit === false;
-
-    return {
-      ...field,
-      ui: {
-        ...field.ui,
-        readOnly: isView || locked,
-        disabled: isView || locked,
-      },
-    };
-  });
-
-  // ============================
-  // ACTIONS
-  // ============================
-  async function handleSave() {
-    setErrors({});
-
-    try {
-      const saved = await saveMutation.mutateAsync(formData);
-      setFormData(saved);
-      setSelectedId(saved.companyId);
-      setMode("view");
-    } catch (err: any) {
-      if (err) {
-        setErrors(err);
-      }
-    }
-  }
-
-  function handleCreate() {
-    setFormData({
-      companyName: "",
-      address: "",
-      city: "",
-      stateCode: "",
-      countryCode: "IN",
-      customerShortName: "",
-      contactNo: "",
-      emailId: "",
-      status: "A",
-    });
-    setSelectedId(undefined);
-    setMode("create");
-  }
-
-  function handleView(id: number) {
-    setSelectedId(id);
-    setMode("view");
-  }
-
-  const actionMap: Record<string, () => void> = {
-    NEW: handleCreate,
-    VIEW: () => handleView(1),
-    EDIT: () => setMode("edit"),
-    SAVE: handleSave,
-  };
-
-  function handleAction(action: string) {
-    actionMap[action]?.();
-  }
-
-  // ============================
-  // RENDER
-  // ============================
   return (
-    <div className="p-3">
-      <p>{JSON.stringify(errors)}</p>
-      <h1 className="text-2xl font-bold ">Company Master</h1>
-      <ButtonContainer menuId={2} onAction={handleAction}>
-        <ReusableForm<CompanyDto>
-          fields={computedFields}
-          className="grid grid-cols-12 gap-2 "
-          values={formData}
-          onChange={setFormData}
-          errors={errors}
+    <div className="p-6">
+      <ButtonContainer
+        menuId={2}
+        onAction={(action) => {
+          if (action === "NEW") {
+            setMode("CREATE");
+            setValues({
+              companyName      : "",
+              address          : "",
+              city             : "",
+              stateCode        : "",
+              countryCode      : "IN",
+              customerShortName: "",
+              contactNo        : "",
+              emailId          : "",
+              status           : "A",
+            });
+          }
+
+          if (action === "EDIT") {
+            setMode("EDIT");
+          }
+
+          if (action === "SAVE") {
+            handleSave(values);
+          }
+          
+        }}
+      >
+        <FormBuilder
+          mode={mode}
+          fields={fields}
+          initialValues={values}
+          onSubmit={handleSave}
+          formClassName="bg-background p-6 border border-border rounded-xl shadow-sm"
+          gridClassName="grid grid-cols-2 gap-4"
         />
       </ButtonContainer>
     </div>
-  );  
+  );
 }

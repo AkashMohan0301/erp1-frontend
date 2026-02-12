@@ -22,14 +22,14 @@ export default function MainLayoutClient({
 return (
   <MainLayoutGuard>
     <SidebarProvider>
-      <div className="flex h-screen w-screen"> {/* important */}
+      <div className="flex h-screen min-w-screen overflow-hidden"> {/* important */}
         <AppSidebar />
 
-        <main className="flex flex-1 flex-col">
+        <main className="flex flex-1 flex-col w-full">
           <TopBar />
 
           {/* Scrollable area */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-auto">
             {children}
           </div>
 

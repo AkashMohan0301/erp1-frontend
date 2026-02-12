@@ -25,8 +25,8 @@ export function ButtonContainer({
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2 justify-end overflow-y">
+    <div className="space-y-4 overflow-hidden">
+      <div className="flex p-1 gap-2 overflow-x-auto justify-end">
         {isLoading && <span>Loading...</span>}
 
         {data?.map((btn) => (
