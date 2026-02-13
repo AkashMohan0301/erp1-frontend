@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FormField } from "./FormField";
+import { FormField } from "./GenericFields";
 import type {
   FormFieldConfig,
   FormErrors,
   FormMode,
-} from "./formTypes";
+} from "./GenericFormTypes";
 
 interface Props<T> {
   fields: FormFieldConfig<T>[];
@@ -29,6 +29,11 @@ export function FormBuilder<T>({
 }: Props<T>) {
   const [values, setValues] = useState<T>(initialValues);
   const [errors, setErrors] = useState<FormErrors<T>>({});
+  
+  useEffect(() => {
+    setValues(initialValues);
+  }, [initialValues]);  
+
 
   const handleChange = (name: keyof T, value: any) => 
     {

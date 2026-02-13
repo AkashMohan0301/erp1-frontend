@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { ButtonContainer } from "@/components/buttonContainer/ButtonContainer";
-import { FormBuilder } from "@/features/forms/FormBuilder";
-import type { FormFieldConfig, FormMode } from "@/features/forms/formTypes";
+import { FormBuilder } from "@/components/form/GenericForm";
+import type { FormFieldConfig, FormMode } from "@/components/form/GenericFormTypes";
 import { api } from "@/lib/api";
 import { companySearchConfig } from "./companySearchConfig";
+import MenuAssignmentPage from "@/features/menuAssignment/MenuAssignmentPage";
 
 interface CompanyDto {
   companyId?: number;
@@ -167,6 +168,8 @@ export default function CompanyMaster() {
           gridClassName="grid grid-cols-2 gap-4"
         />
       </ButtonContainer>
+
+
     </div>
   );
 }

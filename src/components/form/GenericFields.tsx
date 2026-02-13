@@ -24,8 +24,8 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 
 import { api } from "@/lib/api";
-import type { FormFieldConfig, FormMode } from "./formTypes";
-import { LookupDialog } from "@/components/filter/FilterDialog";
+import type { FormFieldConfig, FormMode } from "./GenericFormTypes";
+import { LookupDialog } from "@/components/filter/GenericFilter";
 
 interface Props<T> {
   config: FormFieldConfig<T>;
@@ -46,23 +46,11 @@ export function FormField<T>({
 }: Props<T>) {
   const [lookupOpen, setLookupOpen] = useState(false);
 
-  // =========================
-  // Mode Logic
-  // =========================
-  const isDisabled =
-    mode === "VIEW" || (mode === "EDIT" && config.editableOnEdit === false);
-
-  if (mode === "VIEW" && config.hideOnView) {
-    return null;
-  }
-
-  // =========================
-  // Dynamic Select
-  // =========================
   const parentValue = config.dependsOn
     ? (formValues as any)[config.dependsOn]
     : null;
 
+  // ✅ Hook ALWAYS runs
   const { data: dynamicOptions = [] } = useQuery({
     queryKey: ["dynamic-select", config.endpoint, parentValue],
     queryFn: async () => {
@@ -73,26 +61,35 @@ export function FormField<T>({
       return res.data.data;
     },
     enabled:
-      config.type === "dynamic-select" && (!config.dependsOn || !!parentValue),
+      config.type === "dynamic-select" &&
+      (!config.dependsOn || !!parentValue),
   });
 
+  // ✅ Hook ALWAYS runs
   useEffect(() => {
     if (config.dependsOn) {
       onChange(null);
     }
   }, [parentValue]);
 
-  // =========================
-  // Field Renderer
-  // =========================
+  const isDisabled =
+    mode === "VIEW" ||
+    (mode === "EDIT" && config.editableOnEdit === false);
+
+  // ✅ AFTER hooks
+  if (mode === "VIEW" && config.hideOnView) {
+    return null;
+  }
+
+  // ===================================
+  // FIELD RENDERER
+  // ===================================
   const renderInput = () => {
     switch (config.type) {
       case "text":
         return (
           <Input
-            className={config.inputClassName}
             value={value ?? ""}
-            placeholder={config.placeholder}
             disabled={isDisabled}
             onChange={(e) => onChange(e.target.value)}
           />
@@ -102,7 +99,6 @@ export function FormField<T>({
         return (
           <Input
             type="number"
-            className={config.inputClassName}
             value={value ?? ""}
             disabled={isDisabled}
             onChange={(e) => onChange(e.target.value)}
@@ -112,7 +108,6 @@ export function FormField<T>({
       case "textarea":
         return (
           <Textarea
-            className={config.inputClassName}
             value={value ?? ""}
             disabled={isDisabled}
             onChange={(e) => onChange(e.target.value)}
@@ -123,14 +118,10 @@ export function FormField<T>({
         return (
           <Popover>
             <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                disabled={isDisabled}
-                className={config.inputClassName}
-              >
+              <Button variant="outline" disabled={isDisabled}>
                 {value
                   ? format(new Date(value), "dd-MM-yyyy")
-                  : (config.placeholder ?? "Select date")}
+                  : "Select date"}
                 <CalendarIcon className="ml-auto h-4 w-4" />
               </Button>
             </PopoverTrigger>
@@ -138,7 +129,9 @@ export function FormField<T>({
               <Calendar
                 mode="single"
                 selected={value ? new Date(value) : undefined}
-                onSelect={(date) => onChange(date?.toISOString())}
+                onSelect={(date) =>
+                  onChange(date?.toISOString())
+                }
               />
             </PopoverContent>
           </Popover>
@@ -149,12 +142,12 @@ export function FormField<T>({
           <Select
             value={value ?? ""}
             disabled={isDisabled}
-            onValueChange={(val) => onChange(val)}
+            onValueChange={onChange}
           >
-            <SelectTrigger className={config.inputClassName}>
+            <SelectTrigger>
               <SelectValue placeholder={config.placeholder} />
             </SelectTrigger>
-            <SelectContent className="w-[var(--radix-select-trigger-width)]">
+            <SelectContent>
               {config.options?.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
@@ -168,28 +161,15 @@ export function FormField<T>({
         return (
           <Select
             value={value ?? ""}
-            disabled={isDisabled || (config.dependsOn && !parentValue)}
-            onValueChange={(val) => onChange(val)}
+            disabled={
+              isDisabled ||
+              (config.dependsOn && !parentValue)
+            }
+            onValueChange={onChange}
           >
-            <Select
-              value={value ?? ""}
-              disabled={isDisabled}
-              onValueChange={(val) => onChange(val)}
-            >
-              <SelectTrigger
-                className={`w-full ${config.inputClassName ?? ""}`}
-              >
-                <SelectValue placeholder={config.placeholder} />
-              </SelectTrigger>
-
-              <SelectContent position="popper">
-                {config.options?.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <SelectTrigger>
+              <SelectValue placeholder={config.placeholder} />
+            </SelectTrigger>
             <SelectContent>
               {dynamicOptions.map((opt: any) => (
                 <SelectItem key={opt.value} value={opt.value}>
@@ -205,7 +185,6 @@ export function FormField<T>({
           <>
             <div className="flex gap-2">
               <Input
-                className={config.inputClassName}
                 value={value?.label ?? ""}
                 readOnly
                 disabled={isDisabled}
@@ -229,7 +208,10 @@ export function FormField<T>({
                 onSelect={(row: any) =>
                   onChange({
                     id: row[config.lookupConfig.idField],
-                    label: row[config.lookupConfig.displayField],
+                    label:
+                      row[
+                        config.lookupConfig.displayField
+                      ],
                   })
                 }
               />
@@ -243,15 +225,21 @@ export function FormField<T>({
   };
 
   return (
-    <div className={`space-y-1 ${config.containerClassName ?? ""}`}>
+    <div className="space-y-1">
       <Label>
         {config.label}
-        {config.required && <span className="text-red-500 ml-1">*</span>}
+        {config.required && (
+          <span className="text-red-500 ml-1">*</span>
+        )}
       </Label>
 
       {renderInput()}
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && (
+        <p className="text-sm text-red-500">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

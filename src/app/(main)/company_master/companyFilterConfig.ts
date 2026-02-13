@@ -1,4 +1,4 @@
-import type { LookupConfig } from "@/components/filter/filtertype";
+import type { LookupConfig } from "@/components/filter/GenericFilterTypes";
 import type { CompanyDto } from "@/features/company/companyTypes";
 
 export const companyLookupConfig = {

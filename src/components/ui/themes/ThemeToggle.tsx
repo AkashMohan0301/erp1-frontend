@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { AppDropdown, type DropdownItem } from "@/components/DropdownMenu"
+import { AppDropdown, type DropdownItem } from "@/components/main/DropdownMenu"
 import { Laptop, Moon, Sun, SunMoonIcon } from "lucide-react"
 
 export function ThemeToggle() {
