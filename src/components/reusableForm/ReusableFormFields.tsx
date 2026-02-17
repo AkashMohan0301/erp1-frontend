@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CalendarIcon, Search } from "lucide-react";
@@ -23,9 +23,10 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 
-import { api } from "@/lib/api";
-import type { FormFieldConfig, FormMode } from "./GenericFormTypes";
 import { LookupDialog } from "@/components/filter/GenericFilter";
+import { api } from "@/lib/api";
+
+import type { FormFieldConfig, FormMode } from "./reusableFormTypes";
 
 interface Props<T> {
   config: FormFieldConfig<T>;
@@ -50,9 +51,11 @@ export function FormField<T>({
     ? (formValues as any)[config.dependsOn]
     : null;
 
-  // ✅ Hook ALWAYS runs
+  // ===============================
+  // Dynamic Select (A → B → C)
+  // ===============================
   const { data: dynamicOptions = [] } = useQuery({
-    queryKey: ["dynamic-select", config.endpoint, parentValue],
+    queryKey: ["dynamic", config.endpoint, parentValue],
     queryFn: async () => {
       if (!config.endpoint) return [];
       const res = await api.get(config.endpoint, {
@@ -65,25 +68,18 @@ export function FormField<T>({
       (!config.dependsOn || !!parentValue),
   });
 
-  // ✅ Hook ALWAYS runs
+  // Reset child when parent changes
   useEffect(() => {
     if (config.dependsOn) {
       onChange(null);
     }
   }, [parentValue]);
 
-  const isDisabled =
-    mode === "VIEW" ||
-    (mode === "EDIT" && config.editableOnEdit === false);
+  const isDisabled = mode === "VIEW";
 
-  // ✅ AFTER hooks
-  if (mode === "VIEW" && config.hideOnView) {
-    return null;
-  }
-
-  // ===================================
-  // FIELD RENDERER
-  // ===================================
+  // ===============================
+  // Render
+  // ===============================
   const renderInput = () => {
     switch (config.type) {
       case "text":
@@ -125,6 +121,7 @@ export function FormField<T>({
                 <CalendarIcon className="ml-auto h-4 w-4" />
               </Button>
             </PopoverTrigger>
+
             <PopoverContent>
               <Calendar
                 mode="single"
@@ -145,7 +142,7 @@ export function FormField<T>({
             onValueChange={onChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder={config.placeholder} />
+              <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
               {config.options?.map((opt) => (
@@ -168,7 +165,7 @@ export function FormField<T>({
             onValueChange={onChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder={config.placeholder} />
+              <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
               {dynamicOptions.map((opt: any) => (
@@ -205,15 +202,13 @@ export function FormField<T>({
                 open={lookupOpen}
                 onClose={() => setLookupOpen(false)}
                 config={config.lookupConfig}
-                onSelect={(row: any) =>
+                onSelect={(row: any) => {
                   onChange({
                     id: row[config.lookupConfig.idField],
                     label:
-                      row[
-                        config.lookupConfig.displayField
-                      ],
-                  })
-                }
+                      row[config.lookupConfig.displayField],
+                  });
+                }}
               />
             )}
           </>
@@ -225,7 +220,11 @@ export function FormField<T>({
   };
 
   return (
-    <div className="space-y-1">
+    <div
+      className={`space-y-1 ${
+        config.className ?? ""
+      }`}
+    >
       <Label>
         {config.label}
         {config.required && (

@@ -1,7 +1,6 @@
 // app/(main)/customer/page.tsx
 "use client";
 
-import { ProgramButtonBar } from "@/components/ProgramButtonBar";
 
 export default function DashboardPage() {
   const handleAction = (action: string) => {
@@ -23,7 +22,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      <ProgramButtonBar onAction={handleAction} />
 
       {/* Page content here */}
     </div>

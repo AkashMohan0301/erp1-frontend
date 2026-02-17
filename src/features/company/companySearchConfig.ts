@@ -2,7 +2,7 @@ export const companySearchConfig = {
   title: "Company Search",
   endpoint: "/company/search",
   idField: "companyId",
-  displayField: "companyName",
+  displayField: "companyId",
 
   fields: [
     { name: "companyName", label: "Name", type: "text" },
