@@ -1,19 +1,22 @@
+// src/features/menu/menuUtils.ts
+
 import type { MenuNode } from "./menuType";
 
-export function flattenMenus(menus: MenuNode[] = []): MenuNode[] {
-  const result: MenuNode[] = [];
-
-  for (const m of menus) {
-    result.push(m);
-    if (m.children?.length) {
-      result.push(...flattenMenus(m.children));
-    }
-  }
-
-  return result;
-}
 /**
- * Finds a menu entry by route pathname
+ * Normalize route:
+ * - remove leading slash
+ * - lowercase
+ */
+function normalize(value: string) {
+  return value.replace(/^\/+/, "").toLowerCase();
+}
+
+/**
+ * Match current pathname to menu route.
+ * Supports nested routes:
+ * /company
+ * /company/add
+ * /company/edit/12
  */
 export function findMenuByRoute(
   menus: MenuNode[] | undefined,
@@ -21,13 +24,18 @@ export function findMenuByRoute(
 ): MenuNode | undefined {
   if (!menus) return undefined;
 
+  const current = normalize(pathname);
+
   for (const m of menus) {
-    // 🔹 Match only if route exists
-    if (m.route && m.route === pathname) {
-      return m;
+    if (m.route) {
+      const route = normalize(m.route);
+
+      // ✅ exact match OR nested match
+      if (current === route || current.startsWith(route + "/")) {
+        return m;
+      }
     }
 
-    // 🔹 Search children recursively
     if (m.children?.length) {
       const found = findMenuByRoute(m.children, pathname);
       if (found) return found;
@@ -37,19 +45,22 @@ export function findMenuByRoute(
   return undefined;
 }
 
-
 /**
- * Returns the first allowed route for a unit
+ * Return first routable menu
  */
 export function getDefaultRoute(
   menus: MenuNode[] | undefined
 ): string | null {
   if (!menus) return null;
 
-  const flat = flattenMenus(menus);
+  for (const m of menus) {
+    if (m.route) return "/" + normalize(m.route);
 
-  // 🔹 Find first menu that actually has a route
-  const firstRoutable = flat.find(m => !!m.route);
+    if (m.children?.length) {
+      const child = getDefaultRoute(m.children);
+      if (child) return child;
+    }
+  }
 
-  return firstRoutable?.route ?? null;
+  return null;
 }

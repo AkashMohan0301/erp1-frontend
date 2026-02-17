@@ -1,6 +1,8 @@
-// src/lib/queryKeys.ts
+// src/features/auth/authQueryKeys.ts
+
 export const queryKeys = {
-  authContext: ["auth-context"] as const,
-  userUnits: ["user-units"] as const,
-  csrf      :["csrf"] as const
+  bootstrap: (unitId: number | null) =>
+    ["auth-bootstrap", unitId] as const,
+
+  csrf: ["csrf"] as const,
 };

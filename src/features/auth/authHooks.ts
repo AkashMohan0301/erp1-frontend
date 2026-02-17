@@ -1,48 +1,60 @@
-// path: src/features/auth/auth.hooks.ts
+// src/features/auth/authHooks.ts
+
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { apiQueries } from "@/features/auth/authApiQueries";
-import { apiMutations } from "@/features/auth/authApiMutations";
-import { queryKeys } from "@/features/auth/authQueryKeys";
-
+import { apiQueries } from "./authApiQueries";
+import { apiMutations } from "./authApiMutations";
+import { queryKeys } from "./authQueryKeys";
 import type { LoginInput } from "./authTypes";
 
-import { useAppDispatch } from "@/store/hooks";
-import {setAuthContext,clearAuthContext,setActiveUnit,} from "@/store/authContextSlice";
-
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  setAuthContext,
+  clearAuthContext,
+  setUnits,
+  setMenus,
+  selectUnitId,
+} from "@/store/authContextSlice";
 
 // ============================
-// AUTH CONTEXT (React Query)
+// BOOTSTRAP (UNIT SCOPED)
 // ============================
-export function useAuthContext() {
+export function useBootstrap() {
+  const unitId = useAppSelector(selectUnitId);
+
   return useQuery({
-    ...apiQueries.authContext(),
+    ...apiQueries.bootstrap(unitId),
     retry: false,
   });
 }
 
 // ============================
-// INIT AUTH CONTEXT (Redux hydration)
+// INIT AUTH CONTEXT
 // ============================
 export function useInitAuthContext() {
   const dispatch = useAppDispatch();
-  const { data, isError } = useAuthContext();
+  const { data, isError, isLoading } = useBootstrap();
 
   useEffect(() => {
     if (data) {
       dispatch(
         setAuthContext({
-          userId   : data.userId,
-          companyId: data.companyId,
-          unitId   : data.unitId,
+          userId: data.user.unitId,
+          companyId: data.user.companyId,
+          unitId: data.user.unitId,
         })
       );
+
+      dispatch(setUnits(data.units));
+      dispatch(setMenus(data.menus));
     }
+
     if (isError) {
       dispatch(clearAuthContext());
     }
   }, [data, isError, dispatch]);
+
+  return { isLoading };
 }
 
 // ============================
@@ -53,8 +65,12 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: (data: LoginInput) => apiMutations.login(data),
-    onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: queryKeys.authContext });
+
+    onSuccess: async (_, __, ___) => {
+      // invalidate ALL bootstrap caches
+      await qc.invalidateQueries({
+        queryKey: ["auth-bootstrap"],
+      });
     },
   });
 }
@@ -68,38 +84,7 @@ export function useLogout() {
   return useMutation({
     mutationFn: apiMutations.logout,
     onSuccess: () => {
-      qc.clear(); // clears all cached server state
+      qc.clear();
     },
   });
-}
-
-// ============================
-// USER UNITS
-// ============================
-export function useUserUnits() {
-  return useQuery({
-    ...apiQueries.userUnits(),
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
-// ============================
-// RESTORE UNIT (cookie → redux)
-// ============================
-export function useRestoreUnit() {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const match = document.cookie
-      .split("; ")
-      .find(c => c.startsWith("activeUnitId="));
-
-    if (!match) return;
-
-    const unitId = Number(match.split("=")[1]);
-
-    if (!Number.isNaN(unitId)) {
-      dispatch(setActiveUnit({ unitId }));
-    }
-  }, [dispatch]);
 }

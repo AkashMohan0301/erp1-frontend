@@ -1,43 +1,26 @@
-//path:src/features/auth/authApiQueries.ts
+// src/features/auth/authApiQueries.ts
+
 import { api } from "@/lib/api";
-import type {
-  AuthContextResponse,
-  UserUnit,
-} from "@/features/auth/authTypes";
-import { queryKeys } from "@/features/auth/authQueryKeys";
+import type { AuthBootstrapResponse } from "./authTypes";
+import { queryKeys } from "./authQueryKeys";
 
 export const apiQueries = {
-  // --------------------
-  // AUTH CONTEXT
-  // --------------------
-  authContext: () => ({
-    queryKey: queryKeys.authContext,
-    queryFn: async (): Promise<AuthContextResponse> => {
-      const res = await api.get("/auth/me");
+  bootstrap: (unitId: number | null) => ({
+    queryKey: queryKeys.bootstrap(unitId),
+
+    queryFn: async (): Promise<AuthBootstrapResponse> => {
+      const res = await api.get("/auth/bootstrap");
       return res.data.data;
     },
   }),
 
-  // --------------------
-  // USER UNITS
-  // --------------------
-  userUnits: () => ({
-    queryKey: queryKeys.userUnits,
-    queryFn: async (): Promise<UserUnit[]> => {
-      const res = await api.get("/auth/units");
-      return res.data.data;
-    },
-  }),
-
-  // --------------------
-  // CSRF
-  // --------------------
   csrf: () => ({
     queryKey: queryKeys.csrf,
     queryFn: async () => {
       const res = await api.get("/auth/csrf");
       return res.data.data;
     },
-    staleTime: Infinity, // CSRF token rarely changes
+    staleTime: Infinity,
   }),
 };
+

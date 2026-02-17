@@ -2,9 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useMenus } from "@/features/menu/menuHooks";
 import { useAppSelector } from "@/store/hooks";
-import { selectUnitId } from "@/store/authContextSlice";
+import { selectMenus } from "@/store/authContextSlice";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import {
   findMenuByRoute,
@@ -18,30 +17,27 @@ export function MainLayoutGuard({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const unitId = useAppSelector(selectUnitId);
+  const menus = useAppSelector(selectMenus);
 
-  const { data: menus, isLoading, isFetching } = useMenus(unitId);
+  const hasMenus = menus && menus.length > 0;
 
-  // 🔁 Re-evaluate route whenever unit or menus change
   useEffect(() => {
-    if (unitId == null || isLoading || isFetching) return;
+    if (!hasMenus || !pathname) return;
 
     const currentMenu = findMenuByRoute(menus, pathname);
 
-    // 🚫 Current route not allowed in this unit
     if (!currentMenu) {
       const fallback = getDefaultRoute(menus);
 
-      if (fallback) {
+      if (fallback && fallback !== pathname) {
         router.replace(fallback);
       } else {
         router.replace("/403");
       }
     }
-  }, [unitId, isLoading, isFetching, menus, pathname, router]);
+  }, [menus, pathname, hasMenus, router]);
 
-  // ⛔ Block UI until context is ready
-  if (unitId == null || isLoading || isFetching) {
+  if (!hasMenus) {
     return <SkeletonCard />;
   }
 

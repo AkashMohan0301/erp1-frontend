@@ -18,9 +18,12 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   // ----------------------------
   // UNIT CONTEXT HEADER
   // ----------------------------
-  if (unitId) {
-    config.headers = config.headers ?? {};
-    config.headers["X-UNIT-ID"] = unitId.toString();
+  const unitMatch = document.cookie.match(
+    /(?:^|; )activeUnitId=([^;]+)/
+  );
+
+  if (unitMatch) {
+    config.headers["X-UNIT-ID"] = unitMatch[1];
   }
 
   // ----------------------------

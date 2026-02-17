@@ -3,6 +3,7 @@ export interface MenuNode {
   menuCode: string;
   label: string;
   route: string | null;
+  privileges: string[];
   children: MenuNode[];
 }
 
