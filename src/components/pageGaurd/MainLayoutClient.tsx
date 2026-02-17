@@ -1,14 +1,14 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import Footer from "@/components/AppFooter";
-import TopBar from "@/components/AppTopbar";
-import { MainLayoutGuard } from "@/components/MainLayoutGuard";
+import Footer from "@/components/main/AppFooter";
+import TopBar from "@/components/main/AppTopbar";
+import { MainLayoutGuard } from "@/components/pageGaurd/MainLayoutGuard";
 import dynamic from "next/dynamic";
 import { useInitAuthContext } from "@/features/auth/authHooks";
 
 const AppSidebar = dynamic(
-  () => import("@/components/AppSidebar").then(m => m.AppSidebar),
+  () => import("@/components/main/AppSidebar").then(m => m.AppSidebar),
   { ssr: false }
 );
 

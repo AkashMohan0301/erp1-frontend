@@ -2,11 +2,11 @@
 
 import { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchMenuActions } from "@/features/rbac/rbac.api";
 import { Button } from "@/components/ui/button";
 import { mapVariant } from "./buttonVariantMapper";
 import { mapButtonClass } from "./buttonClassMapper";
 import { mapIcon } from "./buttonIconMapper";
+import { rbacApiQueries } from "@/features/rbac/rbacApiQueries";
 
 interface Props {
   menuId: number;
@@ -19,10 +19,10 @@ export function ButtonContainer({
   onAction,
   children,
 }: Props) {
-  const { data, isLoading } = useQuery({
-    queryKey: ["menu-actions", menuId],
-    queryFn: () => fetchMenuActions(menuId),
-  });
+
+ const { data = [], isLoading } = useQuery(
+    rbacApiQueries.menuActions(menuId)
+  );
 
   return (
     <div className="space-y-4 overflow-hidden">

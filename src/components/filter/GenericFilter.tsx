@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/popover";
 
 import { api } from "@/lib/api";
-import type { LookupConfig, LookupField } from "./filtertype";
+import type { LookupConfig, LookupField } from "./GenericFilterTypes";
 
 interface Props<T> {
   open: boolean;
@@ -53,7 +53,7 @@ export function LookupDialog<T extends Record<string, any>>({
   // Fetch (Simple & Clean)
   // =============================
   const { data, isLoading } = useQuery({
-    queryKey: ["lookup", config.endpoint, filters, page],
+    queryKey: ["filter", config.endpoint, filters, page],
     queryFn: async () => {
       const params: Record<string, any> = {
         Page: page,

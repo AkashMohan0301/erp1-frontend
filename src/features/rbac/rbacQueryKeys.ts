@@ -2,5 +2,5 @@
 
 export const rbacQueryKeys = {
   menuActions: (menuId: number | null) =>
-    ["rbac", "menu-actions", menuId] as const,
+    ["rbac", "menu-buttons", menuId] as const,
 };

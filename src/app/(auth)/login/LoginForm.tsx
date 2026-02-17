@@ -15,9 +15,6 @@ export default function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-console.log("MUTATION ERROR:", loginMutation.error);
-console.log("MESSAGE:", message);
-    // clear previous error state
     loginMutation.reset();
 
     const formData = new FormData(e.currentTarget);
@@ -31,7 +28,7 @@ console.log("MESSAGE:", message);
         onSuccess: () => {
           router.replace("/dashboard");
         },
-      }
+      },
     );
   };
 
@@ -39,13 +36,10 @@ console.log("MESSAGE:", message);
     <main className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-800 p-8">
-
           {/* Header */}
           <div className="text-center mb-8">
             <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
-              <span className="text-white font-semibold text-lg">
-                ERP1
-              </span>
+              <span className="text-white font-semibold text-lg">ERP1</span>
             </div>
 
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
@@ -60,17 +54,16 @@ console.log("MESSAGE:", message);
           {/* Global Error */}
           {message && (
             <div className="mb-4">
-            <PopupMessage
-              message={message}
-              variant="error"
-              autoClose={3000}
-            />
+              <PopupMessage
+                message={message}
+                variant="error"
+                autoClose={3000}
+              />
             </div>
           )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-
             <InputField
               name="username"
               label="Username"

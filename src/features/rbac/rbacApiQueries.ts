@@ -7,12 +7,10 @@ import type { MenuAction } from "./rbacTypes";
 export const rbacApiQueries = {
   menuActions: (menuId: number | null) => ({
     queryKey: rbacQueryKeys.menuActions(menuId),
-
+    enabled: !!menuId,
     queryFn: async (): Promise<MenuAction[]> => {
-      if (!menuId) return [];
-
-      const res = await api.get(`api/rbac/menu-actions/${menuId}`);
-      return res.data.data; // unwrap ApiResponse
+      const res = await api.get(`/rbac/menu-actions/${menuId}`);
+      return res.data ?? [];
     },
   }),
 };

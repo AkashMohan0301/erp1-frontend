@@ -4,8 +4,8 @@
 import { ThemeToggle } from "@/components/ui/themes/ThemeToggle";
 import { useRouter } from "next/navigation";
 import { useLogout } from "@/features/auth/authHooks";
-import { DropdownItem } from "@/components/DropdownMenu";
-import { AppDropdown } from "@/components/DropdownMenu";
+import { DropdownItem } from "@/components/main/DropdownMenu";
+import { AppDropdown } from "@/components/main/DropdownMenu";
 import { Button } from "@/components/ui/button"
 import {UserIcon,CreditCardIcon,SettingsIcon,LogOutIcon,Settings} from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar";
