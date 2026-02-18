@@ -10,8 +10,10 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
   name: "companyId",
   label: "Search Company",
   type: "lookup",
-  colSpan: 2,
+  colSpan: 12,
   lookupConfig: companySearchConfig,
+  disableInModes : ["ADD"]
+  
 },
   {
     name: "companyName",
@@ -19,38 +21,36 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
     type: "text",
     required: true,
     colSpan: 2,
+    disableInModes : ["VIEW"]
   },
   {
     name: "customerShortName",
     label: "Short Name",
     type: "text",
     required: true,
+    disableInModes : ["VIEW"]
   },
-  {
-    name: "status",
-    label: "Status",
-    type: "select",
-    options: [
-      { label: "Active", value: "A" },
-      { label: "Inactive", value: "I" },
-    ],
+    {
+    name: "uniqueId",
+    label: "Unique Id",
+    type: "text",
+    required: true,
+    disableInModes : ["VIEW"]
   },
-
-  // =====================
-  // Address Tab
-  // =====================
   {
     name: "address",
     label: "Address",
     type: "textarea",
     required: true,
     colSpan: 2,
+    disableInModes : ["VIEW"]
   },
   {
     name: "city",
     label: "City",
     type: "text",
     required: true,
+    disableInModes : ["VIEW"]
   },
   {
     name: "stateCode",
@@ -61,6 +61,7 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
       { label: "Tamil Nadu", value: "TN" },
       { label: "Karnataka", value: "KA" },
     ],
+    disableInModes : ["VIEW"]
   },
   {
     name: "countryCode",
@@ -68,19 +69,36 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
     type: "select",
     required: true,
     options: [{ label: "India", value: "IN" }],
+    disableInModes : ["VIEW"]
+  },
+    {
+    name: "pin",
+    label: "Pin",
+    type: "text",
+    required: true,
+    disableInModes : ["VIEW"]
   },
 
-  // =====================
-  // Contact Tab
-  // =====================
   {
     name: "contactNo",
     label: "Contact No",
     type: "text",
+    disableInModes : ["VIEW"]
   },
   {
     name: "emailId",
     label: "Email",
     type: "text",
+    disableInModes : ["VIEW"]
+  },
+    {
+    name: "status",
+    label: "Status",
+    type: "select",
+    options: [
+      { label: "Active", value: "A" },
+      { label: "Inactive", value: "I" },
+    ],
+    disableInModes : ["VIEW"]
   },
 ];

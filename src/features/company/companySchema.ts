@@ -19,6 +19,14 @@ export const companySchema = z.object({
     .string()
     .min(1, "State is required"),
 
+  pin: z
+    .string()
+    .min(1, "State is required"),
+
+  uniqueId : z
+     .string()
+     .min(1,"Unique id is required") ,
+     
   countryCode: z
     .string()
     .min(1, "Country is required"),

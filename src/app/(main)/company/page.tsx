@@ -1,7 +1,7 @@
-import CustomerScreenClient from "./CompanyScreenClient";
+import CompanyMasterPage from "./CompanyMaster";
 
 export default function CustomerPage() {
   return (
-    <CustomerScreenClient /> 
+    <CompanyMasterPage /> 
   );
 }

@@ -10,4 +10,6 @@ export interface CompanyDto {
   contactNo?: string;
   emailId?: string;
   status: string;
+  pin:string;
+  uniqueId :string;
 }

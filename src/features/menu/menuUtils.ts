@@ -64,3 +64,38 @@ export function getDefaultRoute(
 
   return null;
 }
+/**
+ * Return breadcrumb path from menu tree
+ */
+export function getBreadcrumbPath(
+  menus: MenuNode[] | undefined,
+  pathname: string,
+  parentTrail: MenuNode[] = []
+): MenuNode[] | null {
+  if (!menus) return null;
+
+  const current = normalize(pathname);
+
+  for (const menu of menus) {
+    const newTrail = [...parentTrail, menu];
+
+    if (menu.route) {
+      const route = normalize(menu.route);
+
+      if (current === route || current.startsWith(route + "/")) {
+        return newTrail;
+      }
+    }
+
+    if (menu.children?.length) {
+      const childResult = getBreadcrumbPath(
+        menu.children,
+        pathname,
+        newTrail
+      );
+      if (childResult) return childResult;
+    }
+  }
+
+  return null;
+}

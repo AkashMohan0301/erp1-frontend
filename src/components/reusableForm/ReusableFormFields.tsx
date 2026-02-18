@@ -64,8 +64,7 @@ export function FormField<T>({
       return res.data.data;
     },
     enabled:
-      config.type === "dynamic-select" &&
-      (!config.dependsOn || !!parentValue),
+      config.type === "dynamic-select" && (!config.dependsOn || !!parentValue),
   });
 
   // Reset child when parent changes
@@ -75,7 +74,13 @@ export function FormField<T>({
     }
   }, [parentValue]);
 
-  const isDisabled = mode === "VIEW";
+  // Hide entire field
+  if (config.hideInModes?.includes(mode)) {
+    return null;
+  }
+
+  // Disable field
+  const isDisabled = config.disableInModes?.includes(mode) ?? false;
 
   // ===============================
   // Render
@@ -115,9 +120,7 @@ export function FormField<T>({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" disabled={isDisabled}>
-                {value
-                  ? format(new Date(value), "dd-MM-yyyy")
-                  : "Select date"}
+                {value ? format(new Date(value), "dd-MM-yyyy") : "Select date"}
                 <CalendarIcon className="ml-auto h-4 w-4" />
               </Button>
             </PopoverTrigger>
@@ -126,9 +129,7 @@ export function FormField<T>({
               <Calendar
                 mode="single"
                 selected={value ? new Date(value) : undefined}
-                onSelect={(date) =>
-                  onChange(date?.toISOString())
-                }
+                onSelect={(date) => onChange(date?.toISOString())}
               />
             </PopoverContent>
           </Popover>
@@ -158,10 +159,7 @@ export function FormField<T>({
         return (
           <Select
             value={value ?? ""}
-            disabled={
-              isDisabled ||
-              (config.dependsOn && !parentValue)
-            }
+            disabled={isDisabled || (config.dependsOn && !parentValue)}
             onValueChange={onChange}
           >
             <SelectTrigger>
@@ -182,11 +180,14 @@ export function FormField<T>({
           <>
             <div className="flex gap-2">
               <Input
-                value={value?.label ?? ""}
-                readOnly
+                value={value ?? ""}
                 disabled={isDisabled}
+                onChange={(e) => onChange(Number(e.target.value))}
+                onBlur={() => {
+                  if (value) onChange(Number(value));
+                }}
               />
-              {!isDisabled && (
+              {!config.hideFilterInModes?.includes(mode) && !isDisabled && (
                 <Button
                   type="button"
                   variant="outline"
@@ -197,17 +198,15 @@ export function FormField<T>({
               )}
             </div>
 
-            {!isDisabled && (
+            {!config.hideFilterInModes?.includes(mode) && !isDisabled && (
               <LookupDialog
                 open={lookupOpen}
                 onClose={() => setLookupOpen(false)}
                 config={config.lookupConfig}
                 onSelect={(row: any) => {
-                  onChange({
-                    id: row[config.lookupConfig.idField],
-                    label:
-                      row[config.lookupConfig.displayField],
-                  });
+                  const id = row[config.lookupConfig.idField];
+
+                  onChange(id); // store only id in form state
                 }}
               />
             )}
@@ -220,25 +219,15 @@ export function FormField<T>({
   };
 
   return (
-    <div
-      className={`space-y-1 ${
-        config.className ?? ""
-      }`}
-    >
+    <div className={`space-y-1 ${config.className ?? ""}`}>
       <Label>
         {config.label}
-        {config.required && (
-          <span className="text-red-500 ml-1">*</span>
-        )}
+        {config.required && <span className="text-red-500 ml-1">*</span>}
       </Label>
 
       {renderInput()}
 
-      {error && (
-        <p className="text-sm text-red-500">
-          {error}
-        </p>
-      )}
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import type { ZodSchema } from "zod";
 
-export type FormMode = "CREATE" | "VIEW" | "EDIT";
+export type FormMode = "ADD" | "VIEW" | "EDIT";
 
 export type FormFieldType =
   | "text"
@@ -28,6 +28,14 @@ export interface FormFieldConfig<T> {
   dependsOn?: keyof T & string;
 
   lookupConfig?: any;
+
+  onValueChange?: (field: keyof T, value: any) => void;
+  externalData?: Partial<T>;
+
+  hideInModes?: FormMode[];
+  disableInModes?: FormMode[];
+  hideFilterInModes?: FormMode[];
+
 }
 
 export interface FormProps<T> {
@@ -38,6 +46,13 @@ export interface FormProps<T> {
   onSubmit: (values: T) => Promise<any>;
   mode: FormMode;
 
+  onValueChange?: (field: keyof T, value: any) => void;
+  externalData?: Partial<T>;
+
   formClassName?: string;
   gridClassName?: string;
+
+  loadingActions?: string[];
+disabledActions?: string[];
+
 }

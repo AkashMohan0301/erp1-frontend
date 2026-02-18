@@ -28,21 +28,44 @@ export function useReusableForm<T>({
     }));
   };
 
-  const handleSubmit = async () => {
+  // 🔥 FIXED VERSION
+  const handleSubmit = async (): Promise<{
+    hasError: boolean;
+    isFieldError?: boolean;
+    message?: string;
+  }> => {
     try {
       schema.parse(values);
 
       await onSubmit(values);
 
       setErrors({});
+      return { hasError: false };
+
     } catch (err: any) {
-      if (err.name === "ZodError") {
+      if (err?.name === "ZodError") {
         setErrors(mapZodErrors<T>(err));
-      } else {
-        setErrors(mapBackendErrors<T>(err));
+        return { hasError: true, isFieldError: true };
       }
+
+      const backendErrors = err?.response?.data?.details;
+
+      if (backendErrors) {
+        setErrors(mapBackendErrors<T>(err));
+        return { hasError: true, isFieldError: true };
+      }
+
+      // General backend error
+      return {
+        hasError: true,
+        isFieldError: false,
+        message:
+          err?.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      };
     }
   };
+
 
   return {
     values,

@@ -16,38 +16,54 @@ export interface ProgramButtonConfig {
   variant?: ButtonVariant;
   className?: string;
   type?: "button" | "submit";
+  order: number;
+  accessKey?: string; // 🔥 Keyboard shortcut (Alt + key)
 }
 
 export const programButtonMap: Record<string, ProgramButtonConfig> = {
+  ADD: {
+    label: "ADD",
+    action: "add",
+    icon: Plus,
+    variant: "default",
+    order: 1,
+    accessKey: "a", // Alt + A
+  },
+
+  EDIT: {
+    label: "Edit",
+    action: "edit",
+    icon: Pencil,
+    variant: "default",
+    order: 2,
+    accessKey: "e", // Alt + E
+  },
+
   VIEW: {
     label: "View",
     action: "view",
     icon: Eye,
-    variant: "secondary",
+    variant: "default",
+    order: 3,
+    accessKey: "v", // Alt + V
   },
+
   SAVE: {
     label: "Save",
     action: "save",
     icon: Save,
     variant: "default",
     type: "submit",
+    order: 4,
+    accessKey: "s", // Alt + S
   },
-  EDIT: {
-    label: "Edit",
-    action: "edit",
-    icon: Pencil,
-    variant: "outline",
-  },
+
   DELETE: {
     label: "Delete",
     action: "delete",
     icon: Trash2,
     variant: "destructive",
-  },
-  NEW: {
-    label: "New",
-    action: "new",
-    icon: Plus,
-    variant: "default",
+    order: 5,
+    accessKey: "d", // Alt + D
   },
 };

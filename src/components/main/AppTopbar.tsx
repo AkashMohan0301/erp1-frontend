@@ -1,25 +1,26 @@
 "use client";
 
-
 import { ThemeToggle } from "@/components/ui/themes/ThemeToggle";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useLogout } from "@/features/auth/authHooks";
 import { DropdownItem } from "@/components/main/DropdownMenu";
 import { AppDropdown } from "@/components/main/DropdownMenu";
-import { Button } from "@/components/ui/button"
-import {UserIcon,CreditCardIcon,SettingsIcon,LogOutIcon,Settings} from "lucide-react"
+import { Button } from "@/components/ui/button";
+import {
+  UserIcon,
+  CreditCardIcon,
+  SettingsIcon,
+  LogOutIcon,
+  Settings,
+} from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-
-
+import { useAppSelector } from "@/store/hooks";
+import { selectMenus } from "@/store/authContextSlice";
+import { getBreadcrumbPath } from "@/features/menu/menuUtils";
 
 export default function TopBar() {
-
   const router = useRouter();
   const logoutMutation = useLogout();
-
-
-
-
 
   const handleLogout = async () => {
     try {
@@ -30,48 +31,77 @@ export default function TopBar() {
     }
   };
 
-const menuItems: DropdownItem[] = [
-  {
-    type: "item",
-    label: "Profile",
-    icon: <UserIcon className="h-4 w-4" />,
-    onClick: () => console.log("Profile"),
-  },
-  {
-    type: "item",
-    label: "Billing",
-    icon: <CreditCardIcon className="h-4 w-4" />,
-  },
-  {
-    type: "item",
-    label: "Settings",
-    icon: <SettingsIcon className="h-4 w-4" />,
-  },
-  {
-    type: "separator",
-  },
-  {
-    type: "item",
-    label: "Log out",
-    icon: <LogOutIcon className="h-4 w-4" />,
-    variant: "destructive",
-    onClick: handleLogout,
-  },
-]
+  const menuItems: DropdownItem[] = [
+    {
+      type: "item",
+      label: "Profile",
+      icon: <UserIcon className="h-4 w-4" />,
+      onClick: () => console.log("Profile"),
+    },
+    {
+      type: "item",
+      label: "Billing",
+      icon: <CreditCardIcon className="h-4 w-4" />,
+    },
+    {
+      type: "item",
+      label: "Settings",
+      icon: <SettingsIcon className="h-4 w-4" />,
+    },
+    {
+      type: "separator",
+    },
+    {
+      type: "item",
+      label: "Log out",
+      icon: <LogOutIcon className="h-4 w-4" />,
+      variant: "destructive",
+      onClick: handleLogout,
+    },
+  ];
 
+  const pathname = usePathname();
+  const menus = useAppSelector(selectMenus);
+
+  const breadcrumb = getBreadcrumbPath(menus, pathname) ?? [];
 
   return (
     <header className="h-14 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center px-4 shadow-sm">
       <div className="flex items-center gap-3">
-         <SidebarTrigger />
+        <SidebarTrigger />
         <div>
-          <h1 className="text-sm font-semibold">Dashboard</h1>
+          <nav className="flex items-center text-sm text-slate-600 dark:text-slate-300">
+            {breadcrumb.map((item, index) => (
+              <div key={item.route ?? item.label} className="flex items-center">
+                <span
+                  className={
+                    index === breadcrumb.length - 1
+                      ? "font-semibold text-slate-900 dark:text-white"
+                      : ""
+                  }
+                >
+                  {item.label}
+                </span>
+
+                {index < breadcrumb.length - 1 && (
+                  <span className="mx-2 text-slate-400">/</span>
+                )}
+              </div>
+            ))}
+          </nav>
         </div>
       </div>
 
       <div className="flex items-center gap-2 ml-auto">
         <ThemeToggle />
-        <AppDropdown trigger={<Button variant="outline" size="icon"><Settings /></Button>} items={menuItems}/>
+        <AppDropdown
+          trigger={
+            <Button variant="outline" size="icon">
+              <Settings />
+            </Button>
+          }
+          items={menuItems}
+        />
       </div>
     </header>
   );
