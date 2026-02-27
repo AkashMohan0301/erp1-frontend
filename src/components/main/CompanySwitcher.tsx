@@ -37,7 +37,7 @@ export function TeamSwitcher({
   items,
   activeId,
   onChange,
-  label = "Units",
+  label = "Companies",
 }: TeamSwitcherProps) {
   const { isMobile } = useSidebar();
 

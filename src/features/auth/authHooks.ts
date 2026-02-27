@@ -13,17 +13,15 @@ import {
   clearAuthContext,
   setUnits,
   setMenus,
-  selectUnitId,
+  setCompanies
 } from "@/store/authContextSlice";
 
 // ============================
 // BOOTSTRAP (UNIT SCOPED)
 // ============================
 export function useBootstrap() {
-  const unitId = useAppSelector(selectUnitId);
-
   return useQuery({
-    ...apiQueries.bootstrap(unitId),
+    ...apiQueries.bootstrap(),
     retry: false,
   });
 }
@@ -39,12 +37,13 @@ export function useInitAuthContext() {
     if (data) {
       dispatch(
         setAuthContext({
-          userId: data.user.unitId,
+          userId: data.user.userId,        // ✅ FIXED
           companyId: data.user.companyId,
           unitId: data.user.unitId,
         })
       );
 
+      dispatch(setCompanies(data.companies));   // ✅ THIS WAS MISSING
       dispatch(setUnits(data.units));
       dispatch(setMenus(data.menus));
     }
@@ -55,6 +54,21 @@ export function useInitAuthContext() {
   }, [data, isError, dispatch]);
 
   return { isLoading };
+}
+
+export function useSwitchCompany() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (companyId: number) =>
+      apiMutations.switchCompany(companyId),
+
+    onSuccess: async () => {
+      await qc.invalidateQueries({
+        queryKey: ["auth-bootstrap"],
+      });
+    },
+  });
 }
 
 // ============================

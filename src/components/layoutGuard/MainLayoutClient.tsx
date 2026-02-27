@@ -3,7 +3,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Footer from "@/components/main/AppFooter";
 import TopBar from "@/components/main/AppTopbar";
-import { MainLayoutGuard } from "@/components/pageGaurd/MainLayoutGuard";
+import { MainLayoutGuard } from "@/components/layoutGuard/MainLayoutGuard";
 import dynamic from "next/dynamic";
 import { useInitAuthContext } from "@/features/auth/authHooks";
 
@@ -20,17 +20,15 @@ export default function MainLayoutClient({
 
   useInitAuthContext(); 
   return (
-  // ✅ MUST BE HERE
-
     <MainLayoutGuard>
       <SidebarProvider>
-        <div className="flex h-screen min-w-screen overflow-hidden">
+        <div className="flex h-screen min-w-screen">
           <AppSidebar />
 
           <main className="flex flex-1 flex-col w-full">
             <TopBar />
 
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto p-6">
               {children}
             </div>
 

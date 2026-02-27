@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 
-import { LookupDialog } from "@/components/filter/GenericFilter";
+import { LookupDialog } from "@/components/reusableFilter/GenericFilter";
 import { api } from "@/lib/api";
 
 import type { FormFieldConfig, FormMode } from "./reusableFormTypes";

@@ -25,14 +25,7 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
   },
   {
     name: "customerShortName",
-    label: "Short Name",
-    type: "text",
-    required: true,
-    disableInModes : ["VIEW"]
-  },
-    {
-    name: "uniqueId",
-    label: "Unique Id",
+    label: "Customer Short Name",
     type: "text",
     required: true,
     disableInModes : ["VIEW"]
@@ -43,14 +36,16 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
     type: "textarea",
     required: true,
     colSpan: 2,
-    disableInModes : ["VIEW"]
+    disableInModes : ["VIEW"],
+    tab : "Address"
   },
   {
     name: "city",
     label: "City",
     type: "text",
     required: true,
-    disableInModes : ["VIEW"]
+    disableInModes : ["VIEW"],
+     tab : "Address"
   },
   {
     name: "stateCode",
@@ -61,7 +56,8 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
       { label: "Tamil Nadu", value: "TN" },
       { label: "Karnataka", value: "KA" },
     ],
-    disableInModes : ["VIEW"]
+    disableInModes : ["VIEW"],
+     tab : "Address"
   },
   {
     name: "countryCode",
@@ -69,14 +65,16 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
     type: "select",
     required: true,
     options: [{ label: "India", value: "IN" }],
-    disableInModes : ["VIEW"]
+    disableInModes : ["VIEW"],
+     tab : "Address"
   },
     {
     name: "pin",
-    label: "Pin",
+    label: "PIN",
     type: "text",
     required: true,
-    disableInModes : ["VIEW"]
+    disableInModes : ["VIEW"],
+     tab : "Address"
   },
 
   {

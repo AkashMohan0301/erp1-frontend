@@ -28,48 +28,63 @@ export function useReusableForm<T>({
     }));
   };
 
-  // 🔥 FIXED VERSION
-  const handleSubmit = async (): Promise<{
-    hasError: boolean;
-    isFieldError?: boolean;
-    message?: string;
-  }> => {
-    try {
-      schema.parse(values);
 
-      await onSubmit(values);
-
-      setErrors({});
-      return { hasError: false };
-
-    } catch (err: any) {
-      if (err?.name === "ZodError") {
-        setErrors(mapZodErrors<T>(err));
-        return { hasError: true, isFieldError: true };
-      }
-
-      const backendErrors = err?.response?.data?.details;
-
-      if (backendErrors) {
-        setErrors(mapBackendErrors<T>(err));
-        return { hasError: true, isFieldError: true };
-      }
-
-      // General backend error
-      return {
-        hasError: true,
-        isFieldError: false,
-        message:
-          err?.response?.data?.message ||
-          "Something went wrong. Please try again.",
-      };
-    }
+  const reset = () => {
+    setValues(initialValues);
+    setErrors({});
   };
 
+
+
+const handleSubmit = async (): Promise<{
+  hasError: boolean;
+  fieldErrors?: Partial<Record<keyof T & string, string>>;
+  message?: string;
+}> => {
+  try {
+    schema.parse(values);
+
+    await onSubmit(values);
+
+    setErrors({});
+    return { hasError: false };
+
+  } catch (err: any) {
+    if (err?.name === "ZodError") {
+      const zodErrors = mapZodErrors<T>(err);
+      setErrors(zodErrors);
+
+      return {
+        hasError: true,
+        fieldErrors: zodErrors,
+      };
+    }
+
+    const backendErrors = err?.response?.data?.details;
+
+    if (backendErrors) {
+      const mapped = mapBackendErrors<T>(err);
+      setErrors(mapped);
+
+      return {
+        hasError: true,
+        fieldErrors: mapped,
+      };
+    }
+
+    return {
+      hasError: true,
+      message:
+        err?.response?.data?.message ||
+        "Something went wrong. Please try again.",
+    };
+  }
+};
 
   return {
     values,
     errors,
+    reset,
     setValues,
     handleChange,
     handleSubmit,

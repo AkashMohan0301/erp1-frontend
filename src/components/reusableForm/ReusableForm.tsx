@@ -7,6 +7,7 @@ import { ReusableFormTabs } from "./ReusableFormTabs";
 import { useReusableForm } from "./useReusableForm";
 import type { FormProps } from "./reusableFormTypes";
 import { usePopup } from "../popupDialog/PopupProvider";
+import { redirect } from "next/navigation";
 
 export function ReusableForm<T>({
   fields,
@@ -25,45 +26,72 @@ export function ReusableForm<T>({
   const [mode, setMode] = useState(initialMode);
   const { show } = usePopup();
 
-  const { values, errors, handleChange, handleSubmit, setValues } =
+  const { values, errors, handleChange, handleSubmit, setValues, reset } =
     useReusableForm<T>({ initialValues, schema, onSubmit });
 
-  // ===========================
-  // Field Change Handler
-  // ===========================
-  const handleFieldChange = (name: keyof T, value: any) => {
-    handleChange(name, value);
-    onValueChange?.(name, value);
-  };
-
-  // ===========================
-  // Hydrate external data
-  // ===========================
-  useEffect(() => {
-    if (externalData) {
-      setValues(externalData as T);
-      setMode("VIEW");
-    }
-  }, [externalData, setValues]);
-
-  // ===========================
+  // ============================
   // Tabs
-  // ===========================
+  // ============================
   const tabs = useMemo(() => {
     const unique = new Set<string>();
     fields.forEach((f) => unique.add(f.tab ?? "General"));
     return Array.from(unique);
   }, [fields]);
 
-  // ===========================
+  const [activeTab, setActiveTab] = useState<string>(tabs[0]);
+  const [errorTabs, setErrorTabs] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (tabs.length > 0) {
+      setActiveTab(tabs[0]);
+    }
+  }, [tabs]);
+
+  // ============================
+  // Field Change
+  // ============================
+  const handleFieldChange = (name: keyof T, value: any) => {
+    handleChange(name, value);
+    onValueChange?.(name, value);
+  };
+
+  // ============================
+  // Hydrate External Data
+  // ============================
+  useEffect(() => {
+    if (externalData) {
+      setValues(externalData as T);
+      setMode("VIEW");
+      setErrorTabs([]);
+    }
+  }, [externalData, setValues]);
+
+  // ============================
+  // Mode-Based Disabled Actions
+  // ============================
+  const computedDisabledActions = useMemo(() => {
+    const disabled = new Set(disabledActions);
+
+    if (mode === "VIEW") disabled.add("save");
+    if (mode === "ADD") disabled.add("edit");
+    if (mode === "EDIT") disabled.add("add");
+
+    return Array.from(disabled);
+  }, [mode, disabledActions]);
+
+  // ============================
   // Button Actions
-  // ===========================
+  // ============================
   const handleAction = async (action: string) => {
     switch (action) {
       case "save": {
+        if (mode === "VIEW") return;
+
         const result = await handleSubmit();
 
         if (!result.hasError) {
+          setErrorTabs([]);
+
           show({
             type: "success",
             title: "Success",
@@ -73,7 +101,19 @@ export function ReusableForm<T>({
           setValues(initialValues);
           setMode("ADD");
         } else {
-          // Optional: show generic backend error
+          if (result.fieldErrors) {
+            const errorKeys = Object.keys(result.fieldErrors);
+
+            const tabsWithErrors = fields
+              .filter((f) => errorKeys.includes(f.name))
+              .map((f) => f.tab ?? "General");
+
+            if (tabsWithErrors.length > 0) {
+              setActiveTab(tabsWithErrors[0]);
+              setErrorTabs([...new Set(tabsWithErrors)]);
+            }
+          }
+
           show({
             type: "error",
             title: "Error",
@@ -91,31 +131,51 @@ export function ReusableForm<T>({
       case "add":
         setValues(initialValues);
         setMode("ADD");
+        setErrorTabs([]);
         break;
 
       case "view":
         setValues(initialValues);
         setMode("VIEW");
+        setErrorTabs([]);
+        break;
+
+      case "reset":
+        reset();
+        setMode("ADD");
+        setErrorTabs([]);
+        break;
+
+      case "exit":
+        redirect("/dashboard");
         break;
     }
   };
 
+  // ============================
+  // Render
+  // ============================
   return (
-    <div className={formClassName}>
-      <p className="text-2xl font-bold mb-2">{heading}</p>
+    <div className={formClassName} >
+      <p className="text-2xl font-bold mb-4">{heading}</p>
 
       <ProgramButtonBar
-        align="center"
+        align="left"
         onAction={handleAction}
         loadingActions={loadingActions}
-        disabledActions={disabledActions}
+        disabledActions={computedDisabledActions}
       />
 
-      <ReusableFormTabs tabs={tabs}>
-        {(activeTab) => (
+      <ReusableFormTabs
+        tabs={tabs}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        errorTabs={errorTabs}
+      >
+        {(currentTab) => (
           <div className={gridClassName}>
             {fields
-              .filter((f) => (f.tab ?? "General") === activeTab)
+              .filter((f) => (f.tab ?? "General") === currentTab)
               .map((field) => (
                 <div
                   key={field.name}

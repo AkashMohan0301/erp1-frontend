@@ -1,9 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { GalleryVerticalEnd } from "lucide-react";
 import { NavMain } from "@/components/NavMain";
-import { TeamSwitcher } from "./UnitSwitcher";
+import { TeamSwitcher } from "./CompanySwitcher";
 
 import {
   Sidebar,
@@ -12,44 +11,43 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/store/hooks";
 import {
   selectMenus,
-  selectUnitId,
-  selectUnits,
-  setActiveUnit,
+  selectCompanyId,
+  selectCompanies,
 } from "@/store/authContextSlice";
 
 import { mapMenuToNav } from "@/features/menu/menuMapper";
+import { useSwitchCompany } from "@/features/auth/authHooks";
 
 export function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>
 ) {
-  const dispatch = useAppDispatch();
-
-  const unitId = useAppSelector(selectUnitId);
-  const units = useAppSelector(selectUnits);
+  const companyId = useAppSelector(selectCompanyId);
+  const companies = useAppSelector(selectCompanies);
   const menus = useAppSelector(selectMenus);
+
+  const { mutate: switchCompany } = useSwitchCompany();
 
   const navItems = menus?.map(mapMenuToNav) ?? [];
 
-  const unitItems =
-    units?.map((u) => ({
-      id: u.unitId,
-      name: u.unitName,
-      logo: GalleryVerticalEnd,
+  const companyItems =
+    companies?.map((c) => ({
+      id: c.companyId,
+      name: c.companyName,
     })) ?? [];
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher
-          items={unitItems}
-          activeId={unitId}
-          label="Unit"
+          items={companyItems}
+          activeId={companyId}
           onChange={(id) => {
-            dispatch(setActiveUnit({ unitId: id }));
-            document.cookie = `activeUnitId=${id}; path=/; SameSite=Lax`;     
+            if (id !== companyId) {
+              switchCompany(id);
+            }
           }}
         />
       </SidebarHeader>

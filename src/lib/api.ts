@@ -1,4 +1,5 @@
 // path: src/lib/api.ts
+
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { store } from "@/store";
 import { clearAuthContext } from "@/store/authContextSlice";
@@ -11,27 +12,16 @@ export const api = axios.create({
 /* ============================
    REQUEST INTERCEPTOR
 ============================ */
+
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const state = store.getState();
-  const unitId = state.authContext?.unitId;
-
-  // ----------------------------
-  // UNIT CONTEXT HEADER
-  // ----------------------------
-  const unitMatch = document.cookie.match(
-    /(?:^|; )activeUnitId=([^;]+)/
-  );
-
-  if (unitMatch) {
-    config.headers["X-UNIT-ID"] = unitMatch[1];
-  }
-
-  // ----------------------------
-  // CSRF HEADER (Non-GET)
-  // ----------------------------
   const method = config.method?.toUpperCase();
+
+  // ----------------------------
+  // CSRF HEADER (Non-GET only)
+  // ----------------------------
   if (method && method !== "GET") {
     const match = document.cookie.match(/(?:^|; )csrf_token=([^;]+)/);
+
     if (match) {
       config.headers = config.headers ?? {};
       config.headers["X-CSRF-Token"] = decodeURIComponent(match[1]);
@@ -66,13 +56,13 @@ api.interceptors.response.use(
     const isRefreshRequest =
       originalRequest.url?.includes("/auth/refresh");
 
-    // ---------------------------------------------------
-    // DO NOT REFRESH:
-    // - If not 401
-    // - If already retried
-    // - If login endpoint
-    // - If refresh endpoint
-    // ---------------------------------------------------
+    // ---------------------------------------------
+    // DO NOT REFRESH IF:
+    // - Not 401
+    // - Already retried
+    // - Login request
+    // - Refresh request
+    // ---------------------------------------------
     if (
       status !== 401 ||
       originalRequest._retry ||
@@ -84,9 +74,9 @@ api.interceptors.response.use(
 
     originalRequest._retry = true;
 
-    // ---------------------------------------------------
+    // ---------------------------------------------
     // If refresh already running → queue request
-    // ---------------------------------------------------
+    // ---------------------------------------------
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         pendingRequests.push((success) => {

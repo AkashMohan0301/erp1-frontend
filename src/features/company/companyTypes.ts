@@ -11,5 +11,4 @@ export interface CompanyDto {
   emailId?: string;
   status: string;
   pin:string;
-  uniqueId :string;
 }

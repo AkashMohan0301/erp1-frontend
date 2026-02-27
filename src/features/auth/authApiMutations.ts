@@ -11,4 +11,7 @@ export const apiMutations = {
   logout: async (): Promise<void> => {
     await api.post("/auth/logout");
   },
+  switchCompany: async (companyId: number): Promise<void> => {
+  await api.post("/auth/switch-company", { companyId });
+}
 };

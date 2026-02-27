@@ -1,19 +1,13 @@
-"use client";
-
-import { ReusableForm } from "@/components/reusableForm/ReusableForm";
+"use client";import { ReusableForm } from "@/components/reusableForm/ReusableForm";
 import { companySchema } from "@/features/company/companySchema";
 import { companyFormFields } from "@/features/company/companyFormFields";
-import { useSaveCompany } from "@/features/company/companyHooks";
+import { useSaveCompany, useCompany } from "@/features/company/companyHooks";
 import type { CompanyFormValues } from "@/features/company/companySchema";
-
-import { useCompany } from "@/features/company/companyHooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function CompanyMasterPage() {
   const saveMutation = useSaveCompany();
-
   const [selectedId, setSelectedId] = useState<number | undefined>();
-
   const { data: companyData } = useCompany(selectedId);
 
   const initialValues: CompanyFormValues = {
@@ -27,8 +21,7 @@ export default function CompanyMasterPage() {
     contactNo: "",
     emailId: "",
     status: "A",
-    pin: "",
-    uniqueId: "",
+    pin: ""
   };
 
   return (
@@ -38,7 +31,6 @@ export default function CompanyMasterPage() {
       initialValues={initialValues}
       schema={companySchema}
       mode="ADD"
-      formClassName="p-3 bg-background rounded-sm border shadow-sm"
       onSubmit={async (values) => {
         await saveMutation.mutateAsync(values);
       }}

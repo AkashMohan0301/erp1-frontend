@@ -7,7 +7,7 @@ import { findMenuByRoute } from "@/features/menu/menuUtils";
 import { programButtonMap } from "@/components/program/programButtonConfig";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
-import { Loader2 } from "lucide-react"; // 🔥 Spinner icon
+import { Loader2 } from "lucide-react";
 
 interface Props {
   onAction?: (action: string) => void;
@@ -36,7 +36,6 @@ export function ProgramButtonBar({
     center: "justify-center",
   };
 
-  // 🔥 Sort buttons using order
   const sortedButtons = currentMenu.privileges
     .map((code) => ({
       code,
@@ -45,7 +44,6 @@ export function ProgramButtonBar({
     .filter((item) => item.config)
     .sort((a, b) => a.config.order - b.config.order);
 
-  // 🔥 Keyboard Shortcut Handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!e.altKey) return;
@@ -59,7 +57,7 @@ export function ProgramButtonBar({
       if (!availableButtons) return;
 
       const match = availableButtons.find(
-        (btn) => btn.accessKey?.toLowerCase() === key,
+        (btn) => btn.accessKey?.toLowerCase() === key
       );
 
       if (!match) return;
@@ -83,9 +81,8 @@ export function ProgramButtonBar({
       className={`
         sticky top-0 z-50
         backdrop-blur-md
-        bg-white/20 dark:bg-zinc-900/60
-        border-b border-white/20 dark:border-white/10
-        px-4 py-3
+        border-b 
+        py-3
         flex gap-2 flex-wrap
         mb-1
         ${justifyMap[align]}
@@ -102,10 +99,9 @@ export function ProgramButtonBar({
             type={config.type ?? "button"}
             variant={config.variant}
             disabled={isDisabled || isLoading}
-            className="flex items-center gap-2"
+            className={`flex items-center gap-2 ${config.className ?? ""}`}
             onClick={() => onAction?.(config.action)}
           >
-            {/* 🔥 Show spinner if loading */}
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (

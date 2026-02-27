@@ -1,7 +1,14 @@
 export type LoginInput = {
+  subscriberId:number;
   username: string;
   password: string;
 };
+
+export interface UserCompany {
+  companyId: number;
+  companyName: string;
+}
+
 
 export interface UserUnit {
   unitId: number;
@@ -17,6 +24,11 @@ export interface MenuNode {
   children: MenuNode[];
 }
 
+export interface UserCompany {
+  companyId: number;
+  companyName: string;
+}
+
 export interface AuthBootstrapResponse {
   user: {
     userId: number;
@@ -24,6 +36,7 @@ export interface AuthBootstrapResponse {
     companyId: number;
     unitId: number;
   };
+  companies: UserCompany[];
   units: UserUnit[];
   menus: MenuNode[];
 }

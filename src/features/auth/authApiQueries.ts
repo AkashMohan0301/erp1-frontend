@@ -5,8 +5,8 @@ import type { AuthBootstrapResponse } from "./authTypes";
 import { queryKeys } from "./authQueryKeys";
 
 export const apiQueries = {
-  bootstrap: (unitId: number | null) => ({
-    queryKey: queryKeys.bootstrap(unitId),
+  bootstrap: () => ({
+    queryKey: queryKeys.bootstrap(),
 
     queryFn: async (): Promise<AuthBootstrapResponse> => {
       const res = await api.get("/auth/bootstrap");
