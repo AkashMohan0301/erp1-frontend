@@ -21,7 +21,7 @@ export const companySchema = z.object({
 
   pin: z
     .string()
-    .min(1, "State is required"),
+    .min(1, "PIN is required"),
      
   countryCode: z
     .string()
@@ -29,7 +29,7 @@ export const companySchema = z.object({
 
   customerShortName: z
     .string()
-    .min(1, "Short Name is required"),
+    .min(1, "Customer Short Name is required"),
 
   contactNo: z.string().optional(),
 
@@ -42,5 +42,5 @@ export const companySchema = z.object({
   status: z.string(),
 });
 
-export type CompanyFormValues =
+export type CompanySchema =
   z.infer<typeof companySchema>;

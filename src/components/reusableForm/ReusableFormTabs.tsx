@@ -4,9 +4,9 @@ import {
   Tabs,
   TabsContent,
   TabsList,
-  TabsTrigger,
+  TabsTrigger
 } from "@/components/ui/tabs";
-
+import { Button } from "../ui/button";
 interface Props {
   tabs: string[];
   activeTab: string;
@@ -71,25 +71,26 @@ export function ReusableFormTabs({
       {/* Navigation Buttons */}
       <div className="flex justify-between mt-8">
         {hasPrevious ? (
-          <button
+          <Button 
             type="button"
+            size="sm"
             onClick={goPrevious}
-            className="px-4 py-2 border rounded"
+            
           >
             Back
-          </button>
+          </Button>
         ) : (
           <div />
         )}
 
         {hasNext && (
-          <button
+          <Button
+          size="sm"
             type="button"
             onClick={goNext}
-            className="px-4 py-2 bg-primary text-white rounded"
           >
             Next
-          </button>
+          </Button>
         )}
       </div>
     </Tabs>

@@ -38,16 +38,7 @@ export default function TopBar() {
       icon: <UserIcon className="h-4 w-4" />,
       onClick: () => console.log("Profile"),
     },
-    {
-      type: "item",
-      label: "Billing",
-      icon: <CreditCardIcon className="h-4 w-4" />,
-    },
-    {
-      type: "item",
-      label: "Settings",
-      icon: <SettingsIcon className="h-4 w-4" />,
-    },
+
     {
       type: "separator",
     },

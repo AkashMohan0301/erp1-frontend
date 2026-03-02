@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/store/hooks";
 import { selectMenus } from "@/store/authContextSlice";
 import { findMenuByRoute } from "@/features/menu/menuUtils";
-import { programButtonMap } from "@/components/program/programButtonConfig";
+import { programButtonMap } from "@/components/reusableButtonBar/reusableButtonConfig";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
@@ -16,7 +16,7 @@ interface Props {
   align?: "left" | "right" | "center";
 }
 
-export function ProgramButtonBar({
+export function ResusableButtonBar({
   onAction,
   loadingActions = [],
   disabledActions = [],
@@ -79,7 +79,7 @@ export function ProgramButtonBar({
   return (
     <div
       className={`
-        sticky top-0 z-50
+        sticky top-1 z-50
         backdrop-blur-md
         border-b 
         py-3

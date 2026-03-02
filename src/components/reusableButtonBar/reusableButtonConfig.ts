@@ -9,7 +9,7 @@ export type ButtonVariant =
   | "ghost"
   | "link";
 
-export interface ProgramButtonConfig {
+export interface ReusableButtonConfig {
   label: string;
   action: string;
   icon?: LucideIcon;
@@ -20,7 +20,7 @@ export interface ProgramButtonConfig {
   accessKey?: string; // 🔥 Keyboard shortcut (Alt + key)
 }
 
-export const programButtonMap: Record<string, ProgramButtonConfig> = {
+export const programButtonMap: Record<string, ReusableButtonConfig> = {
   ADD: {
     label: "Add",
     action: "add",

@@ -1,8 +1,8 @@
 import type { FormFieldConfig } from "@/components/reusableForm/reusableFormTypes";
-import type { CompanyFormValues } from "./companySchema";
+import type { CompanySchema } from "./companySchema";
 import { companySearchConfig } from "./companySearchConfig";
 
-export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
+export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
   // =====================
   // General Tab
   // =====================
@@ -48,25 +48,24 @@ export const companyFormFields: FormFieldConfig<CompanyFormValues>[] = [
      tab : "Address"
   },
   {
-    name: "stateCode",
-    label: "State",
-    type: "select",
-    required: true,
-    options: [
-      { label: "Tamil Nadu", value: "TN" },
-      { label: "Karnataka", value: "KA" },
-    ],
-    disableInModes : ["VIEW"],
-     tab : "Address"
-  },
-  {
     name: "countryCode",
     label: "Country",
-    type: "select",
+    type: "dynamic-select",
     required: true,
-    options: [{ label: "India", value: "IN" }],
-    disableInModes : ["VIEW"],
-     tab : "Address"
+    endpoint: "/genfixedcode/COUNTRY",
+    disableInModes: ["VIEW"],
+    tab: "Address",
+  },
+  {
+    name: "stateCode",
+    label: "State",
+    type: "dynamic-select",
+    required: true,
+    endpoint: "/genfixedcode/STATE",
+    dependsOn: "countryCode",
+    parentCodeId: "COUNTRY",
+    disableInModes: ["VIEW"],
+    tab: "Address",
   },
     {
     name: "pin",

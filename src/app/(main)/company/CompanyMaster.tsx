@@ -2,7 +2,7 @@
 import { companySchema } from "@/features/company/companySchema";
 import { companyFormFields } from "@/features/company/companyFormFields";
 import { useSaveCompany, useCompany } from "@/features/company/companyHooks";
-import type { CompanyFormValues } from "@/features/company/companySchema";
+import type { CompanySchema } from "@/features/company/companySchema";
 import { useState } from "react";
 
 export default function CompanyMasterPage() {
@@ -10,7 +10,7 @@ export default function CompanyMasterPage() {
   const [selectedId, setSelectedId] = useState<number | undefined>();
   const { data: companyData } = useCompany(selectedId);
 
-  const initialValues: CompanyFormValues = {
+  const initialValues: CompanySchema = {
     companyId: undefined,
     companyName: "",
     address: "",
@@ -25,7 +25,7 @@ export default function CompanyMasterPage() {
   };
 
   return (
-    <ReusableForm<CompanyFormValues>
+    <ReusableForm<CompanySchema>
       heading="Company Master"
       fields={companyFormFields}
       initialValues={initialValues}

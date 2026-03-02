@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import type { ZodSchema } from "zod";
 
 export type FormMode = "ADD" | "VIEW" | "EDIT";
@@ -26,9 +27,10 @@ export interface FormFieldConfig<T> {
 
   endpoint?: string;
   dependsOn?: keyof T & string;
+  parentCodeId?: string;
 
   lookupConfig?: any;
-
+ 
   onValueChange?: (field: keyof T, value: any) => void;
   externalData?: Partial<T>;
 
@@ -54,5 +56,8 @@ export interface FormProps<T> {
 
   loadingActions?: string[];
 disabledActions?: string[];
+
+  // ✅ ADD THIS
+  children?: (tab: string) => ReactNode;
 
 }

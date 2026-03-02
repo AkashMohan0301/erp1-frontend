@@ -59,7 +59,12 @@ export function FormField<T>({
     queryFn: async () => {
       if (!config.endpoint) return [];
       const res = await api.get(config.endpoint, {
-        params: parentValue ? { parentId: parentValue } : {},
+        params: parentValue
+          ? {
+              parentCodeId: config.parentCodeId,
+              parentCodeValue: parentValue,
+            }
+          : {},
       });
       return res.data.data;
     },
@@ -68,10 +73,16 @@ export function FormField<T>({
   });
 
   // Reset child when parent changes
+  const [previousParent, setPreviousParent] = useState(parentValue);
+
   useEffect(() => {
-    if (config.dependsOn) {
+    if (!config.dependsOn) return;
+
+    if (previousParent !== parentValue) {
       onChange(null);
     }
+
+    setPreviousParent(parentValue);
   }, [parentValue]);
 
   // Hide entire field
@@ -156,10 +167,21 @@ export function FormField<T>({
         );
 
       case "dynamic-select":
+        if (config.dependsOn && !parentValue) {
+          return (
+            <Select disabled>
+              <SelectTrigger>
+                <SelectValue placeholder="Select parent first" />
+              </SelectTrigger>
+            </Select>
+          );
+        }
+
         return (
           <Select
+            key={`${config.name}-${parentValue}`}
             value={value ?? ""}
-            disabled={isDisabled || (config.dependsOn && !parentValue)}
+            disabled={isDisabled}
             onValueChange={onChange}
           >
             <SelectTrigger>
@@ -167,8 +189,8 @@ export function FormField<T>({
             </SelectTrigger>
             <SelectContent>
               {dynamicOptions.map((opt: any) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
+                <SelectItem key={opt.codeValue} value={opt.codeValue}>
+                  {opt.codeDesc}
                 </SelectItem>
               ))}
             </SelectContent>

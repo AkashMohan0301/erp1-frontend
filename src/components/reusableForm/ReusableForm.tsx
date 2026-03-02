@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ProgramButtonBar } from "@/components/program/ProgramButtonBar";
+import { ResusableButtonBar } from "@/components/reusableButtonBar/ReusableButtonBar";
 import { FormField } from "./ReusableFormFields";
 import { ReusableFormTabs } from "./ReusableFormTabs";
 import { useReusableForm } from "./useReusableForm";
@@ -22,6 +22,7 @@ export function ReusableForm<T>({
   externalData,
   loadingActions = [],
   disabledActions = [],
+  children, // ✅ ADD THIS
 }: FormProps<T>) {
   const [mode, setMode] = useState(initialMode);
   const { show } = usePopup();
@@ -156,10 +157,10 @@ export function ReusableForm<T>({
   // Render
   // ============================
   return (
-    <div className={formClassName} >
-      <p className="text-2xl font-bold mb-4">{heading}</p>
+    <div className={formClassName}>
+      <p className="text-2xl font-bold mb-1">{heading}</p>
 
-      <ProgramButtonBar
+      <ResusableButtonBar
         align="left"
         onAction={handleAction}
         loadingActions={loadingActions}
@@ -173,25 +174,31 @@ export function ReusableForm<T>({
         errorTabs={errorTabs}
       >
         {(currentTab) => (
-          <div className={gridClassName}>
-            {fields
-              .filter((f) => (f.tab ?? "General") === currentTab)
-              .map((field) => (
-                <div
-                  key={field.name}
-                  className={`col-span-${field.colSpan ?? 1}`}
-                >
-                  <FormField
-                    config={field}
-                    value={(values as any)[field.name]}
-                    formValues={values}
-                    error={errors[field.name]}
-                    mode={mode}
-                    onChange={(val) => handleFieldChange(field.name, val)}
-                  />
-                </div>
-              ))}
-          </div>
+          <>
+            {/* Default Form Fields */}
+            <div className={gridClassName}>
+              {fields
+                .filter((f) => (f.tab ?? "General") === currentTab)
+                .map((field) => (
+                  <div
+                    key={field.name}
+                    className={`col-span-${field.colSpan ?? 1}`}
+                  >
+                    <FormField
+                      config={field}
+                      value={(values as any)[field.name]}
+                      formValues={values}
+                      error={errors[field.name]}
+                      mode={mode}
+                      onChange={(val) => handleFieldChange(field.name, val)}
+                    />
+                  </div>
+                ))}
+            </div>
+
+            {/* ✅ Custom Tab Content */}
+            {children?.(currentTab)}
+          </>
         )}
       </ReusableFormTabs>
     </div>
