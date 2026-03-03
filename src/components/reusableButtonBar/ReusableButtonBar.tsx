@@ -8,6 +8,7 @@ import { programButtonMap } from "@/components/reusableButtonBar/reusableButtonC
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { Card } from "../ui/card";
 
 interface Props {
   onAction?: (action: string) => void;
@@ -77,14 +78,13 @@ export function ResusableButtonBar({
   }, [currentMenu, disabledActions, loadingActions, onAction]);
 
   return (
-    <div
+    <Card
       className={`
         sticky top-1 z-50
-        backdrop-blur-md
-        border-b 
-        py-3
-        flex gap-2 flex-wrap
-        mb-1
+        flex flex-row gap-2 flex-wrap
+        p-2
+        shadow-md
+        mb-4
         ${justifyMap[align]}
       `}
     >
@@ -116,6 +116,6 @@ export function ResusableButtonBar({
           </Button>
         );
       })}
-    </div>
+    </Card>
   );
 }

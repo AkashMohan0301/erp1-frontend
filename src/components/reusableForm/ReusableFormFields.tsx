@@ -106,6 +106,15 @@ export function FormField<T>({
             onChange={(e) => onChange(e.target.value)}
           />
         );
+      case "password":
+        return (
+          <Input
+            type = "password"
+            value={value ?? ""}
+            disabled={isDisabled}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        );
 
       case "number":
         return (

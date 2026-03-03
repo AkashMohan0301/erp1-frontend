@@ -2,7 +2,7 @@ import type { FormFieldConfig } from "@/components/reusableForm/reusableFormType
 import type { z } from "zod";
 import { userSchema } from "./userSchema";
 import { userSearchConfig } from "./userSearchConfig";
-import { companySearchConfig } from "../company/companySearchConfig";
+import { companySearchConfig } from "../companymaster/companySearchConfig";
 
 export type UserFormValues = z.infer<typeof userSchema>;
 
@@ -18,7 +18,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     },
     {
   name: "companyId",
-  label: "Company",
+  label: "Company ID",
   type: "lookup",
   required: true,
   colSpan: 12,
@@ -63,11 +63,25 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
   {
     name: "password",
     label: "Password",
-    type: "text",
+    type: "password",
     tab: "Password",
+    colSpan :12
   },
-  // 👇 Dummy tab markers for privilege sections
+    {
+    name: "confirmPassword",
+    label: "Confirm Password",
+    type: "password",
+    tab: "Password",
+    colSpan :12
+  },
 
+{
+  name: "loginId",
+  label: "",
+  type: "text",
+  tab: "Companies",
+  hideInModes: ["ADD", "EDIT", "VIEW"],
+},
 {
   name: "loginId", // dummy reuse (won't render if filtered properly)
   label: "",

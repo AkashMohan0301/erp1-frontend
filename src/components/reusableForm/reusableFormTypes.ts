@@ -10,7 +10,8 @@ export type FormFieldType =
   | "select"
   | "dynamic-select"
   | "lookup"
-  | "textarea";
+  | "textarea"
+  |"password";
 
 export interface FormFieldConfig<T> {
   name: keyof T & string;
@@ -55,9 +56,13 @@ export interface FormProps<T> {
   gridClassName?: string;
 
   loadingActions?: string[];
-disabledActions?: string[];
+  disabledActions?: string[];
 
   // ✅ ADD THIS
-  children?: (tab: string) => ReactNode;
+  children?: (
+  tab: string,
+  values: T,
+  setValues: (values: T) => void
+) => React.ReactNode;
 
 }

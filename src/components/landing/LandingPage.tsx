@@ -1,4 +1,5 @@
 import React from 'react'
+import { ThemeToggle } from '../ui/themes/ThemeToggle'
 
 export default function LandingPage () {
   return (
@@ -25,6 +26,7 @@ export default function LandingPage () {
             <a href="/login" className="px-3 py-1.5 text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
               Login
             </a>
+            <ThemeToggle />
           </nav>
         </header>
 

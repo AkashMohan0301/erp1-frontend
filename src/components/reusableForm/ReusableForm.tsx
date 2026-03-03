@@ -8,10 +8,11 @@ import { useReusableForm } from "./useReusableForm";
 import type { FormProps } from "./reusableFormTypes";
 import { usePopup } from "../popupDialog/PopupProvider";
 import { redirect } from "next/navigation";
+import { Card } from "../ui/card";
 
 export function ReusableForm<T>({
   fields,
-  heading,
+  // heading,
   initialValues,
   schema,
   onSubmit,
@@ -131,6 +132,7 @@ export function ReusableForm<T>({
 
       case "add":
         setValues(initialValues);
+        reset();
         setMode("ADD");
         setErrorTabs([]);
         break;
@@ -144,6 +146,9 @@ export function ReusableForm<T>({
       case "reset":
         reset();
         setMode("ADD");
+        if (tabs.length > 0) {
+          setActiveTab(tabs[0]);
+        }
         setErrorTabs([]);
         break;
 
@@ -158,7 +163,7 @@ export function ReusableForm<T>({
   // ============================
   return (
     <div className={formClassName}>
-      <p className="text-2xl font-bold mb-1">{heading}</p>
+      {/* <p className="text-2xl font-bold mb-1">{heading}</p> */}
 
       <ResusableButtonBar
         align="left"
@@ -174,7 +179,7 @@ export function ReusableForm<T>({
         errorTabs={errorTabs}
       >
         {(currentTab) => (
-          <>
+          <Card>
             {/* Default Form Fields */}
             <div className={gridClassName}>
               {fields
@@ -197,8 +202,8 @@ export function ReusableForm<T>({
             </div>
 
             {/* ✅ Custom Tab Content */}
-            {children?.(currentTab)}
-          </>
+            {children?.(currentTab, values, setValues)}
+          </Card>
         )}
       </ReusableFormTabs>
     </div>

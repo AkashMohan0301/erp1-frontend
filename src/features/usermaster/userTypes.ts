@@ -1,7 +1,6 @@
 export interface UserModulePrivilege {
   moduleId: string;
   companyId: number;
-  unitId: number;
   role: "O" | "A" | "S";
   modulePriority: number;
 }
@@ -10,7 +9,7 @@ export interface UserMenuPrivilege {
   menuId: number;
   moduleId: string;
   companyId: number;
-  unitId: number;
+
 }
 
 export interface UserButtonPrivilege {
@@ -18,13 +17,11 @@ export interface UserButtonPrivilege {
   moduleId: string;
   buttonId: string;
   companyId: number;
-  unitId: number;
 }
 
 export interface UserDashboardPrivilege {
   dashboardId: number;
   companyId: number;
-  unitId: number;
 }
 
 export interface UserSearchRow {
@@ -37,12 +34,19 @@ export interface UserSavePayload {
   userId?: number;
   loginId: string;
   userName: string;
-  companyId: number;
+  companyId: number; // default login company
   userType: "S" | "A" | "O" | "E";
   employeeId?: number;
   remarks?: string;
   status: "R" | "A" | "I";
   password?: string;
+  confirmPassword?: string;
+
+  companyPrivileges: UserCompanyPrivilege[];
+}
+
+export interface UserCompanyPrivilege {
+  companyId: number;
 
   modulePrivileges: UserModulePrivilege[];
   menuPrivileges: UserMenuPrivilege[];

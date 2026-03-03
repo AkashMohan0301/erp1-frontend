@@ -1,3 +1,4 @@
+//usermaster/components
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,7 +9,6 @@ interface Props {
     dashboardId: number;
     dashboardName: string;
     companyId: number;
-    unitId: number;
   }[];
 
   selected: UserDashboardPrivilege[];
@@ -36,7 +36,7 @@ export function DashboardPrivilegeTab({
         {
           dashboardId: dash.dashboardId,
           companyId: dash.companyId,
-          unitId: dash.unitId,
+       
         },
       ]);
     }

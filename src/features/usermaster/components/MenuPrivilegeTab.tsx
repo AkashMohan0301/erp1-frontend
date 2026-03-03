@@ -1,3 +1,5 @@
+//usermaster/components
+
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -47,7 +49,7 @@ export function MenuPrivilegeTab({
           menuId: menu.menuId,
           moduleId: menu.moduleId,
           companyId: menu.companyId,
-          unitId: menu.unitId,
+        
         },
       ]);
     }
@@ -63,7 +65,7 @@ export function MenuPrivilegeTab({
   return (
     <div className="space-y-4">
       {Object.entries(grouped).map(([moduleId, moduleMenus]: any) => (
-        <div key={moduleId} className="border p-3 rounded-md">
+        <div key={moduleId} className="border p-3 rounded-md bg-white">
           <div className="font-semibold mb-2">
             Module: {moduleId}
           </div>

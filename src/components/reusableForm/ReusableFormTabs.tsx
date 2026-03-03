@@ -45,7 +45,7 @@ export function ReusableFormTabs({
       className="w-full"
     >
       {/* Tab Headers */}
-      <TabsList className="mb-6">
+      <TabsList className=" ">
         {tabs.map((tab) => {
           const hasError = errorTabs.includes(tab);
 

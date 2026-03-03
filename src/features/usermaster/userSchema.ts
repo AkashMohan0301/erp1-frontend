@@ -1,11 +1,45 @@
 import { z } from "zod";
 
+
+const userModulePrivilegeSchema = z.object({
+  moduleId: z.string(),
+  companyId: z.number(),
+  role: z.enum(["O", "A", "S"]),
+  modulePriority: z.number(),
+});
+
+const userMenuPrivilegeSchema = z.object({
+  menuId: z.number(),
+  moduleId: z.string(),
+  companyId: z.number(),
+});
+
+const userButtonPrivilegeSchema = z.object({
+  menuId: z.number(),
+  moduleId: z.string(),
+  buttonId: z.string(),
+  companyId: z.number(),
+});
+
+const userDashboardPrivilegeSchema = z.object({
+  dashboardId: z.number(),
+  companyId: z.number(),
+});
+
+const userCompanyPrivilegeSchema = z.object({
+  companyId: z.number(),
+  modulePrivileges: z.array(userModulePrivilegeSchema),
+  menuPrivileges: z.array(userMenuPrivilegeSchema),
+  buttonPrivileges: z.array(userButtonPrivilegeSchema),
+  dashboardPrivileges: z.array(userDashboardPrivilegeSchema),
+});
+
 export const userSchema = z.object({
   userId: z.number().optional(),
 
-  loginId: z.string().min(1).max(50),
+  loginId: z.string().min(1,"Login ID is required").max(50),
 
-  userName: z.string().min(1).max(75),
+  userName: z.string().min(1,"Username is required").max(75),
 
   companyId: z.number().min(1, "Company is required"),
 
@@ -17,5 +51,24 @@ export const userSchema = z.object({
 
   status: z.enum(["R", "A", "I"]),
 
-  password: z.string().optional()
-});
+  password: z.string().optional(),
+  
+  confirmPassword :z.string().optional(),
+
+  companyPrivileges: z.array(userCompanyPrivilegeSchema).default([]),
+
+}
+)  .refine(
+    (data) => {
+      // Only validate if password is provided
+      if (data.password) {
+        return data.password === data.confirmPassword;
+      }
+      return true;
+    },
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"], 
+    },
+  );
+;
