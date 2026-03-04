@@ -80,7 +80,7 @@ export function ResusableButtonBar({
   return (
     <Card
       className={`
-        sticky top-1 z-50
+        sticky top-0 z-50
         flex flex-row gap-2 flex-wrap
         p-2
         shadow-md

@@ -29,18 +29,21 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     name: "loginId",
     label: "Login ID",
     type: "text",
+    disableInModes : ["VIEW"],
     required: true,
   },
   {
     name: "userName",
     label: "User Name",
     type: "text",
+    disableInModes : ["VIEW"],
     required: true,
   },
   {
     name: "userType",
     label: "User Role",
     type: "select",
+    disableInModes : ["VIEW"],
     options: [
       { label: "Super User", value: "S" },
       { label: "Admin", value: "A" },
@@ -52,6 +55,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     name: "status",
     label: "Status",
     type: "select",
+    disableInModes : ["VIEW"],
     options: [
       { label: "Registered", value: "R" },
       { label: "Active", value: "A" },
@@ -65,6 +69,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     label: "Password",
     type: "password",
     tab: "Password",
+    disableInModes : ["VIEW"],
     colSpan :12
   },
     {
@@ -72,6 +77,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     label: "Confirm Password",
     type: "password",
     tab: "Password",
+    disableInModes : ["VIEW"],
     colSpan :12
   },
 
@@ -80,37 +86,23 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
   label: "",
   type: "text",
   tab: "Companies",
+  disableInModes : ["VIEW"],
   hideInModes: ["ADD", "EDIT", "VIEW"],
 },
-{
-  name: "loginId", // dummy reuse (won't render if filtered properly)
-  label: "",
-  type: "text",
-  tab: "Modules",
-  hideInModes: ["ADD", "EDIT", "VIEW"], // hide field itself
-},
-
 {
   name: "loginId",
   label: "",
   type: "text",
-  tab: "Menus",
+  tab: "Privileges",
+  disableInModes : ["VIEW"],
   hideInModes: ["ADD", "EDIT", "VIEW"],
 },
-
-{
-  name: "loginId",
-  label: "",
-  type: "text",
-  tab: "Buttons",
-  hideInModes: ["ADD", "EDIT", "VIEW"],
-},
-
 {
   name: "loginId",
   label: "",
   type: "text",
   tab: "Dashboards",
+  disableInModes : ["VIEW"],
   hideInModes: ["ADD", "EDIT", "VIEW"],
 },
 ];

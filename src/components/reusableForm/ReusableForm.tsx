@@ -10,9 +10,11 @@ import { usePopup } from "../popupDialog/PopupProvider";
 import { redirect } from "next/navigation";
 import { Card } from "../ui/card";
 
+import { setFormMode } from "@/store/authContextSlice";
+import { useAppDispatch } from "@/store/hooks";
+
 export function ReusableForm<T>({
   fields,
-  // heading,
   initialValues,
   schema,
   onSubmit,
@@ -23,17 +25,28 @@ export function ReusableForm<T>({
   externalData,
   loadingActions = [],
   disabledActions = [],
-  children, // ✅ ADD THIS
-}: FormProps<T>) {
+  children,
+  onReset,
+}: FormProps<T> & { onReset?: () => void }) {
   const [mode, setMode] = useState(initialMode);
+  const dispatch = useAppDispatch();
   const { show } = usePopup();
 
   const { values, errors, handleChange, handleSubmit, setValues, reset } =
     useReusableForm<T>({ initialValues, schema, onSubmit });
 
-  // ============================
-  // Tabs
-  // ============================
+  /* =================================
+     Sync mode to Redux
+  ================================= */
+
+  useEffect(() => {
+    dispatch(setFormMode(mode));
+  }, [mode, dispatch]);
+
+  /* =================================
+     Tabs
+  ================================= */
+
   const tabs = useMemo(() => {
     const unique = new Set<string>();
     fields.forEach((f) => unique.add(f.tab ?? "General"));
@@ -49,41 +62,51 @@ export function ReusableForm<T>({
     }
   }, [tabs]);
 
-  // ============================
-  // Field Change
-  // ============================
+  /* =================================
+     Field Change
+  ================================= */
+
   const handleFieldChange = (name: keyof T, value: any) => {
     handleChange(name, value);
     onValueChange?.(name, value);
   };
 
-  // ============================
-  // Hydrate External Data
-  // ============================
+  /* =================================
+     Hydrate External Data
+  ================================= */
+
   useEffect(() => {
     if (externalData) {
       setValues(externalData as T);
-      setMode("VIEW");
       setErrorTabs([]);
     }
   }, [externalData, setValues]);
 
-  // ============================
-  // Mode-Based Disabled Actions
-  // ============================
+  /* =================================
+     Button disable logic
+  ================================= */
+
   const computedDisabledActions = useMemo(() => {
     const disabled = new Set(disabledActions);
 
     if (mode === "VIEW") disabled.add("save");
-    if (mode === "ADD") disabled.add("edit");
     if (mode === "EDIT") disabled.add("add");
 
     return Array.from(disabled);
   }, [mode, disabledActions]);
 
-  // ============================
-  // Button Actions
-  // ============================
+  const handleReset = () => {
+    setErrorTabs([]);
+    reset();
+    if (tabs.length > 0) {
+      setActiveTab(tabs[0]);
+    }
+  };
+
+  /* =================================
+     Actions
+  ================================= */
+
   const handleAction = async (action: string) => {
     switch (action) {
       case "save": {
@@ -132,24 +155,23 @@ export function ReusableForm<T>({
 
       case "add":
         setValues(initialValues);
-        reset();
+        handleReset();
+        onReset?.();
         setMode("ADD");
         setErrorTabs([]);
         break;
 
       case "view":
         setValues(initialValues);
+        handleReset();
+        onReset?.();
         setMode("VIEW");
-        setErrorTabs([]);
         break;
 
       case "reset":
-        reset();
+        handleReset();
+        onReset?.();
         setMode("ADD");
-        if (tabs.length > 0) {
-          setActiveTab(tabs[0]);
-        }
-        setErrorTabs([]);
         break;
 
       case "exit":
@@ -158,13 +180,12 @@ export function ReusableForm<T>({
     }
   };
 
-  // ============================
-  // Render
-  // ============================
+  /* =================================
+     Render
+  ================================= */
+
   return (
     <div className={formClassName}>
-      {/* <p className="text-2xl font-bold mb-1">{heading}</p> */}
-
       <ResusableButtonBar
         align="left"
         onAction={handleAction}
@@ -180,7 +201,8 @@ export function ReusableForm<T>({
       >
         {(currentTab) => (
           <Card>
-            {/* Default Form Fields */}
+            {/* Default Fields */}
+
             <div className={gridClassName}>
               {fields
                 .filter((f) => (f.tab ?? "General") === currentTab)
@@ -194,14 +216,14 @@ export function ReusableForm<T>({
                       value={(values as any)[field.name]}
                       formValues={values}
                       error={errors[field.name]}
-                      mode={mode}
                       onChange={(val) => handleFieldChange(field.name, val)}
                     />
                   </div>
                 ))}
             </div>
 
-            {/* ✅ Custom Tab Content */}
+            {/* Custom Tab Content */}
+
             {children?.(currentTab, values, setValues)}
           </Card>
         )}

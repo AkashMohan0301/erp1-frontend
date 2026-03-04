@@ -1,5 +1,4 @@
-import type { LookupConfig } from "@/components/reusableFilter/GenericFilterTypes";
-import type { CompanyDto } from "@/features/companymaster/companyTypes";
+
 
 export const companyLookupConfig = {
   title: "Company Search",

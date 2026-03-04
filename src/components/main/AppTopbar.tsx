@@ -67,7 +67,7 @@ export default function TopBar() {
                 <span
                   className={
                     index === breadcrumb.length - 1
-                      ? "font-semibold text-slate-900 dark:text-white"
+                      ? "font-extrabold text-slate-900 dark:text-white"
                       : ""
                   }
                 >

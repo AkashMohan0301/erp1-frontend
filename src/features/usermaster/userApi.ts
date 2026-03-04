@@ -7,8 +7,8 @@ export const userApi = {
     return res.data.data;
   },
 
-    getById: async (id: number) => {
+  getById: async (id: number) => {
     const res = await api.get(`/usermaster/${id}`);
     return res.data.data;
-    },
+  },
 };

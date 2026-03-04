@@ -1,7 +1,8 @@
-//path : src/features/company/companyQueryKeys.ts
 export const companyQueryKeys = {
   all: ["company"] as const,
 
-  byId: (id: number) =>
-    [...companyQueryKeys.all, "byId", id] as const,
+  lists: () => [...companyQueryKeys.all, "list"] as const,
+
+  detail: (id: number) =>
+    [...companyQueryKeys.all, "detail", id] as const,
 };

@@ -47,7 +47,7 @@ export interface UserSavePayload {
 
 export interface UserCompanyPrivilege {
   companyId: number;
-
+  companyName? :string;
   modulePrivileges: UserModulePrivilege[];
   menuPrivileges: UserMenuPrivilege[];
   buttonPrivileges: UserButtonPrivilege[];

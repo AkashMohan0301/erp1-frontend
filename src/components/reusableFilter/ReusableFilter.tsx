@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/popover";
 
 import { api } from "@/lib/api";
-import type { LookupConfig, LookupField } from "./GenericFilterTypes";
+import type { LookupConfig, LookupField } from "./reusableFilterTypes";
 
 interface Props<T> {
   open: boolean;

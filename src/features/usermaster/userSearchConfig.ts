@@ -1,4 +1,4 @@
-import type { LookupConfig } from "@/components/reusableFilter/GenericFilterTypes";
+import { LookupConfig } from "@/components/reusableFilter/reusableFilterTypes";
 import type { UserSearchRow } from "./userTypes";
 
 export const userSearchConfig: LookupConfig<UserSearchRow> = {

@@ -28,10 +28,22 @@ const userDashboardPrivilegeSchema = z.object({
 
 const userCompanyPrivilegeSchema = z.object({
   companyId: z.number(),
-  modulePrivileges: z.array(userModulePrivilegeSchema),
-  menuPrivileges: z.array(userMenuPrivilegeSchema),
-  buttonPrivileges: z.array(userButtonPrivilegeSchema),
-  dashboardPrivileges: z.array(userDashboardPrivilegeSchema),
+
+  modulePrivileges: z
+    .array(userModulePrivilegeSchema)
+    .default([]),
+
+  menuPrivileges: z
+    .array(userMenuPrivilegeSchema)
+    .default([]),
+
+  buttonPrivileges: z
+    .array(userButtonPrivilegeSchema)
+    .default([]),
+
+  dashboardPrivileges: z
+    .array(userDashboardPrivilegeSchema)
+    .default([]),
 });
 
 export const userSchema = z.object({
@@ -51,11 +63,22 @@ export const userSchema = z.object({
 
   status: z.enum(["R", "A", "I"]),
 
-  password: z.string().optional(),
-  
-  confirmPassword :z.string().optional(),
+password: z
+  .string()
+  .nullable()
+  .optional()
+  .transform(v => v ?? ""),
 
-  companyPrivileges: z.array(userCompanyPrivilegeSchema).default([]),
+confirmPassword: z
+  .string()
+  .nullable()
+  .optional()
+  .transform(v => v ?? ""),
+
+  companyPrivileges: z
+    .array(userCompanyPrivilegeSchema)
+    .optional()
+    .default([]),
 
 }
 )  .refine(

@@ -10,6 +10,7 @@ interface AuthState {
   companies: UserCompany[];
   units: UserUnit[];
   menus: MenuNode[];
+  formMode: "ADD" | "EDIT" | "VIEW";   // ✅ NEW
 }
 
 const initialState: AuthState = {
@@ -19,6 +20,7 @@ const initialState: AuthState = {
   companies:[],
   units: [],
   menus: [],
+  formMode:"ADD" // ✅ NEW
 };
 
 const slice = createSlice({
@@ -65,6 +67,12 @@ const slice = createSlice({
       state.units = [];
       state.menus = [];
     },
+    setFormMode(
+      state,
+      action: PayloadAction<"ADD" | "EDIT" | "VIEW">
+    ) {
+      state.formMode = action.payload;
+    },
   },
 });
 
@@ -75,6 +83,7 @@ export const {
   setMenus,
   clearAuthContext,
   setActiveCompany,
+  setFormMode, 
 } = slice.actions;
 export default slice.reducer;
 
@@ -83,3 +92,4 @@ export const selectUserId = (state: RootState) => state.authContext.userId;
 export const selectCompanyId = (state: RootState) => state.authContext.companyId;
 export const selectCompanies = (state: RootState) => state.authContext.companies;
 export const selectMenus = (state: RootState) => state.authContext.menus;
+export const selectFormMode = (state: RootState) =>state.authContext.formMode;

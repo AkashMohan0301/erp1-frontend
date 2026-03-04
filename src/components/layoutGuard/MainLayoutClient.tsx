@@ -28,7 +28,7 @@ export default function MainLayoutClient({
           <main className="flex flex-1 flex-col w-full">
             <TopBar />
 
-            <div className="flex-1 overflow-auto p-3">
+            <div className="flex-1 overflow-auto pl-2 pr-2">
               {children}
             </div>
 

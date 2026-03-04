@@ -1,24 +1,31 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { companyApi } from "./companyApi";
+import { companyQueryKeys } from "./companyQueryKeys";
 import type { CompanyDto } from "./companyTypes";
-import { companyApiMutations } from "./companyApiMutations";
-import { companyApiQueries } from "./companyApiQueries";
 
 export function useCompany(id?: number) {
-  return useQuery<CompanyDto>({
-    ...companyApiQueries.getById(id!),
-
+  return useQuery({
+    queryKey: companyQueryKeys.detail(id!),
+    queryFn: () => companyApi.getById(id!),
     enabled: !!id,
-
-    staleTime: 0,
-    gcTime: 0,
-
-    refetchOnMount: "always",
-    refetchOnWindowFocus: false,
   });
 }
 
 export function useSaveCompany() {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: companyApiMutations.save,
+    mutationFn: companyApi.save,
+
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: companyQueryKeys.all,
+      });
+
+      queryClient.setQueryData(
+        companyQueryKeys.detail(data.companyId!),
+        data
+      );
+    },
   });
 }
