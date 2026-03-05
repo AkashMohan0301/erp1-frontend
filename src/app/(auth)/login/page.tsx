@@ -1,6 +1,6 @@
 //path : src/app/%28auth%29/login/page.tsx
 import Image from "next/image";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "../../../features/login/LoginForm";
 import { GalleryVerticalEnd } from "lucide-react";
 export default function LoginPage() {
   return (

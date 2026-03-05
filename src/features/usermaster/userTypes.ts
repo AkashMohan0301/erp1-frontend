@@ -30,6 +30,15 @@ export interface UserSearchRow {
   userName: string;
   status: string;
 }
+export interface UserCompanyPrivilege {
+  companyId: number;
+  companyName? :string;
+  modulePrivileges: UserModulePrivilege[];
+  menuPrivileges: UserMenuPrivilege[];
+  buttonPrivileges: UserButtonPrivilege[];
+  dashboardPrivileges: UserDashboardPrivilege[];
+}
+
 export interface UserSavePayload {
   userId?: number;
   loginId: string;
@@ -43,13 +52,4 @@ export interface UserSavePayload {
   confirmPassword?: string;
 
   companyPrivileges: UserCompanyPrivilege[];
-}
-
-export interface UserCompanyPrivilege {
-  companyId: number;
-  companyName? :string;
-  modulePrivileges: UserModulePrivilege[];
-  menuPrivileges: UserMenuPrivilege[];
-  buttonPrivileges: UserButtonPrivilege[];
-  dashboardPrivileges: UserDashboardPrivilege[];
 }

@@ -45,7 +45,8 @@ export function ReusableFormTabs({
       className="w-full"
     >
       {/* Tab Headers */}
-      <TabsList className=" ">
+      <div className="w-full overflow-x-auto overflow-y-hidden">
+      <TabsList >
         {tabs.map((tab) => {
           const hasError = errorTabs.includes(tab);
 
@@ -60,6 +61,8 @@ export function ReusableFormTabs({
           );
         })}
       </TabsList>
+      </div>
+
 
       {/* Tab Contents */}
       {tabs.map((tab) => (

@@ -3,8 +3,8 @@ import type { z } from "zod";
 import { userSchema } from "./userSchema";
 import { userSearchConfig } from "./userSearchConfig";
 import { companySearchConfig } from "../companymaster/companySearchConfig";
+import { UserFormValues } from "./userSchema";
 
-export type UserFormValues = z.infer<typeof userSchema>;
 
 export const userFormFields: FormFieldConfig<UserFormValues>[] = [
   // GENERAL TAB
@@ -34,7 +34,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
   },
   {
     name: "userName",
-    label: "User Name",
+    label: "Username",
     type: "text",
     disableInModes : ["VIEW"],
     required: true,

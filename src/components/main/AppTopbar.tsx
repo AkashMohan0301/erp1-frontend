@@ -57,7 +57,7 @@ export default function TopBar() {
   const breadcrumb = getBreadcrumbPath(menus, pathname) ?? [];
 
   return (
-    <header className="h-14 border-b rounded-b-sm flex items-center px-4 shadow-sm mt-1">
+    <header className="h-14 border-b rounded-b-sm flex items-center px-4 shadow-sm mt-1 overflow-auto">
       <div className="flex items-center gap-3">
         <SidebarTrigger />
         <div>

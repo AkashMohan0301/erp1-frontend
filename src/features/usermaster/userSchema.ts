@@ -49,13 +49,13 @@ const userCompanyPrivilegeSchema = z.object({
 export const userSchema = z.object({
   userId: z.number().optional(),
 
-  loginId: z.string().min(1,"Login ID is required").max(50),
+  loginId:   z.string().min(5,"Minimum 5 Characters is Required").max(50),
 
-  userName: z.string().min(1,"Username is required").max(75),
+  userName:  z.string().min(1,"Username is required").max(75),
 
   companyId: z.number().min(1, "Company is required"),
 
-  userType: z.enum(["S", "A", "O", "E"]),
+  userType:   z.enum(["S", "A", "O", "E"]),
 
   employeeId: z.number().optional(),
 
@@ -67,7 +67,16 @@ password: z
   .string()
   .nullable()
   .optional()
-  .transform(v => v ?? ""),
+  .transform(v => v ?? "")
+  .refine(
+    (val) =>
+      val === "" ||
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(val),
+    {
+      message:
+        "Password must be at least 8 characters and include 1 uppercase, 1 lowercase, and 1 number",
+    }
+  ),
 
 confirmPassword: z
   .string()
@@ -83,7 +92,6 @@ confirmPassword: z
 }
 )  .refine(
     (data) => {
-      // Only validate if password is provided
       if (data.password) {
         return data.password === data.confirmPassword;
       }
@@ -95,3 +103,5 @@ confirmPassword: z
     },
   );
 ;
+
+export type UserFormValues = z.infer<typeof userSchema>;

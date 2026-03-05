@@ -1,11 +1,10 @@
 // app/(main)/customer/page.tsx
-"use client";
-
+import { ChartPieSeparatorNone } from "@/components/charts/Linechart";
 
 export default function DashboardPage() {
   return (
     <div className="space-y-4 p-2">
-      <p className="text-2xl font-bold"> Welcome!</p>
+        <ChartPieSeparatorNone/>
     </div>
   );
 }

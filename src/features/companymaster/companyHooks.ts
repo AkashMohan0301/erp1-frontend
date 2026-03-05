@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { companyApi } from "./companyApi";
 import { companyQueryKeys } from "./companyQueryKeys";
-import type { CompanyDto } from "./companyTypes";
+
 
 export function useCompany(id?: number) {
   return useQuery({

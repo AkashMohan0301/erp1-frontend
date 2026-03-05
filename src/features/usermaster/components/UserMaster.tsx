@@ -5,7 +5,7 @@ import { ReusableForm } from "@/components/reusableForm/ReusableForm";
 
 import { userSchema } from "@/features/usermaster/userSchema";
 import { userFormFields } from "@/features/usermaster/userFormFields";
-import type { UserFormValues } from "@/features/usermaster/userFormFields";
+import { UserFormValues } from "@/features/usermaster/userSchema";
 
 import { useSaveUser, useUser } from "@/features/usermaster/userHooks";
 import { usePrivilegeSetup } from "@/features/usermaster/privilegeHooks";
