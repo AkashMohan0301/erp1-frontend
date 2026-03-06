@@ -12,10 +12,8 @@ export function useUser(id?: number) {
 
 export function useSaveUser() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: userApi.save,
-
     onSuccess: (id) => {
       queryClient.invalidateQueries({
         queryKey: userQueryKeys.all,

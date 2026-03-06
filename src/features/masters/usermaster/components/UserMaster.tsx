@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { ReusableForm } from "@/components/reusableForm/ReusableForm";
 
-import { userSchema } from "@/features/usermaster/userSchema";
-import { userFormFields } from "@/features/usermaster/userFormFields";
-import { UserFormValues } from "@/features/usermaster/userSchema";
+import { userSchema } from "@/features/masters/usermaster/userSchema";
+import { userFormFields } from "@/features/masters/usermaster/userFormFields";
+import { UserFormValues } from "@/features/masters/usermaster/userSchema";
 
-import { useSaveUser, useUser } from "@/features/usermaster/userHooks";
-import { usePrivilegeSetup } from "@/features/usermaster/privilegeHooks";
+import { useSaveUser, useUser } from "@/features/masters/usermaster/userHooks";
+import { usePrivilegeSetup } from "@/features/masters/usermaster/privilegeHooks";
 
-import { CompanyPrivilegeTab } from "@/features/usermaster/components/CompanyPrivilegeTab";
-import { DashboardPrivilegeTab } from "@/features/usermaster/components/DashboardPrivilegeTab";
+import { CompanyPrivilegeTab } from "@/features/masters/usermaster/components/CompanyPrivilegeTab";
+import { DashboardPrivilegeTab } from "@/features/masters/usermaster/components/DashboardPrivilegeTab";
 import { PrivilegeTree } from "./PrivilegeTree";
 
 export default function UserMasterPage() {

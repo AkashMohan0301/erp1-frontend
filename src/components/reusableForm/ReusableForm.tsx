@@ -221,7 +221,13 @@ export function ReusableForm<T>({
                   </div>
                 ))}
             </div>
-
+            {loadingActions.includes("save") && (
+              <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+                <div className="bg-white px-6 py-4 rounded shadow">
+                  Saving... Please wait
+                </div>
+              </div>
+            )}
             {/* Custom Tab Content */}
 
             {children?.(currentTab, values, setValues)}

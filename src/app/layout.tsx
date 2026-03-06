@@ -3,7 +3,11 @@ import { PopupProvider } from "@/components/popupDialog/PopupProvider";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ProvidersClient } from "@/components/providers/providersClient";
-
+export const metadata = {
+  title: "ERP1",
+  description: "ERP System",
+  manifest: "/manifest.json",
+};
 export default function RootLayout({
   children,
 }: {

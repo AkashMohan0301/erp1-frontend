@@ -1,9 +1,9 @@
 "use client";
 import { ReusableForm } from "@/components/reusableForm/ReusableForm";
-import { companySchema } from "@/features/companymaster/companySchema";
-import { companyFormFields } from "@/features/companymaster/companyFormFields";
-import { useSaveCompany, useCompany } from "@/features/companymaster/companyHooks";
-import type { CompanySchema } from "@/features/companymaster/companySchema";
+import { companySchema } from "@/features/masters/companymaster/companySchema";
+import { companyFormFields } from "@/features/masters/companymaster/companyFormFields";
+import { useSaveCompany, useCompany } from "@/features/masters/companymaster/companyHooks";
+import type { CompanySchema } from "@/features/masters/companymaster/companySchema";
 import { useState } from "react";
 
 export default function CompanyMasterPage() {
