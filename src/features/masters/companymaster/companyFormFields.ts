@@ -8,9 +8,9 @@ export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
   // =====================
   {
   name: "companyId",
-  label: "Search Company",
+  label: "Company ID",
   type: "lookup",
-  colSpan: 12,
+  colSpan: 6,
   lookupConfig: companySearchConfig,
   disableInModes : ["ADD"]
   
@@ -20,7 +20,7 @@ export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
     label: "Company Name",
     type: "text",
     required: true,
-    colSpan: 2,
+    colSpan: 6,
     disableInModes : ["VIEW"]
   },
   {
@@ -35,17 +35,16 @@ export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
     label: "Address",
     type: "textarea",
     required: true,
-    colSpan: 2,
+    colSpan: 6,
     disableInModes : ["VIEW"],
-    tab : "Address"
   },
   {
     name: "city",
     label: "City",
     type: "text",
+    colSpan:6,
     required: true,
     disableInModes : ["VIEW"],
-     tab : "Address"
   },
   {
     name: "countryCode",
@@ -54,7 +53,7 @@ export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
     required: true,
     endpoint: "/genfixedcode/COUNTRY",
     disableInModes: ["VIEW"],
-    tab: "Address",
+    colSpan:4
   },
   {
     name: "stateCode",
@@ -65,7 +64,7 @@ export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
     dependsOn: "countryCode",
     parentCodeId: "COUNTRY",
     disableInModes: ["VIEW"],
-    tab: "Address",
+     colSpan:4
   },
     {
     name: "pin",
@@ -73,19 +72,21 @@ export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
     type: "text",
     required: true,
     disableInModes : ["VIEW"],
-     tab : "Address"
+     colSpan:4
   },
 
   {
     name: "contactNo",
     label: "Contact No",
     type: "text",
+    colSpan:6,
     disableInModes : ["VIEW"]
   },
   {
     name: "emailId",
     label: "Email",
     type: "text",
+    colSpan:6,
     disableInModes : ["VIEW"]
   },
     {

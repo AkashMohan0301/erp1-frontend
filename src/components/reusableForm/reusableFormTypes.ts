@@ -21,6 +21,7 @@ export interface FormFieldConfig<T> {
   tab?: string; // grouping
   required?: boolean;
 
+  rowSpan?: number; // ✅ ADD THIS
   colSpan?: number;
   className?: string;
 
@@ -38,6 +39,8 @@ export interface FormFieldConfig<T> {
   hideInModes?: FormMode[];
   disableInModes?: FormMode[];
   hideFilterInModes?: FormMode[];
+
+  uppercase?: boolean;   // 👈 ADD THIS
 
 }
 

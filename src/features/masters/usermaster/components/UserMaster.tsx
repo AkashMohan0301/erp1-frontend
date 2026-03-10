@@ -72,7 +72,7 @@ export default function UserMasterPage() {
         const companies = values.companyPrivileges ?? [];
 
         switch (tab) {
-          case "Companies":
+          case "Company Privilege":
             return (
               <CompanyPrivilegeTab
                 companies={privilegeData.companies}
@@ -86,7 +86,7 @@ export default function UserMasterPage() {
               />
             );
 
-          case "Privileges":
+          case "Menu Privilege":
             if (companies.length === 0)
               return <div>Select companies first.</div>;
 

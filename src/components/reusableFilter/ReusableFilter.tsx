@@ -183,14 +183,14 @@ export function LookupDialog<T extends Record<string, any>>({
         </DialogHeader>
 
         {/* Filters */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {config.fields.map(renderField)}
 
-          <Button
+          {/* <Button
             onClick={() => setPage(1)}
           >
             Search
-          </Button>
+          </Button> */}
         </div>
 
         {/* Table */}

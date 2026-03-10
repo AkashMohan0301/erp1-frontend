@@ -5,6 +5,7 @@ export const uomFormFields: FormFieldConfig<any>[] = [
     name: "codeValue",
     label: "UOM Code",
     type: "text",
+    uppercase: true,
     required: true,
   },
   {

@@ -27,7 +27,7 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     icon: Plus,
     variant: "default",
     order: 1,
-    accessKey: "a", // Alt + A
+    accessKey: "A", // Alt + A
   },
 
   EDIT: {
@@ -36,7 +36,7 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     icon: Pencil,
     variant: "default",
     order: 2,
-    accessKey: "e", // Alt + E
+    accessKey: "E", // Alt + E
   },
 
   VIEW: {
@@ -45,7 +45,7 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     icon: Eye,
     variant: "default",
     order: 3,
-    accessKey: "v", // Alt + V
+    accessKey: "V", // Alt + V
   },
 
   SAVE: {
@@ -55,7 +55,7 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     variant: "default",
     type: "submit",
     order: 4,
-    accessKey: "s", // Alt + S
+    accessKey: "S", // Alt + S
   },
   PRINT: {
     label: "Print",
@@ -64,7 +64,7 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     variant: "default",
     type: "submit",
     order: 5,
-    accessKey: "p", // Alt + P  
+    accessKey: "P", // Alt + P  
   },
     RESET: {
     label: "Reset",
@@ -73,7 +73,7 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     variant: "default",
     type: "submit",
     order: 6,
-    accessKey: "r", // Alt + R
+    accessKey: "R", // Alt + R
   },
       EXIT: {
     label: "Exit",
@@ -82,7 +82,7 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     variant: "default",
     type: "submit",
     order: 7,
-    accessKey: "e", // Alt + E
+    accessKey: "E", // Alt + E
   },
   DELETE: {
     label: "Delete",
@@ -90,6 +90,6 @@ export const programButtonMap: Record<string, ReusableButtonConfig> = {
     icon: Trash2,
     variant: "destructive",
     order: 8,
-    accessKey: "d", // Alt + D
+    accessKey: "D", // Alt + D
   },
 };

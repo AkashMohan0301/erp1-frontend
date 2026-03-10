@@ -7,8 +7,10 @@ import { findMenuByRoute } from "@/features/menu/menuUtils";
 import { programButtonMap } from "@/components/reusableButtonBar/reusableButtonConfig";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, SaveIcon } from "lucide-react";
 import { Card } from "../ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Kbd } from "../ui/kbd";
 
 interface Props {
   onAction?: (action: string) => void;
@@ -58,7 +60,7 @@ export function ResusableButtonBar({
       if (!availableButtons) return;
 
       const match = availableButtons.find(
-        (btn) => btn.accessKey?.toLowerCase() === key
+        (btn) => btn.accessKey?.toLowerCase() === key,
       );
 
       if (!match) return;
@@ -94,8 +96,9 @@ export function ResusableButtonBar({
         const isDisabled = disabledActions.includes(config.action);
 
         return (
+          <Tooltip key={code}>
+            <TooltipTrigger asChild>
           <Button
-            key={code}
             type={config.type ?? "button"}
             variant={config.variant}
             disabled={isDisabled || isLoading}
@@ -114,6 +117,11 @@ export function ResusableButtonBar({
                 : "Processing..."
               : config.label}
           </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              ALT + <Kbd>{config.accessKey}</Kbd>
+            </TooltipContent>
+          </Tooltip>
         );
       })}
     </Card>

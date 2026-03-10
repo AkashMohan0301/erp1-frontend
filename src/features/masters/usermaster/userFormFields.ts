@@ -10,7 +10,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
   // GENERAL TAB
     {
     name: "userId",
-    label: "Search User",
+    label: "User ID",
     type: "lookup",
     colSpan: 12,
     lookupConfig: userSearchConfig,
@@ -18,7 +18,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     },
     {
   name: "companyId",
-  label: "Company ID",
+  label: "Default Company ID",
   type: "lookup",
   required: true,
   colSpan: 12,
@@ -31,6 +31,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     type: "text",
     disableInModes : ["VIEW"],
     required: true,
+    colSpan:6
   },
   {
     name: "userName",
@@ -38,6 +39,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     type: "text",
     disableInModes : ["VIEW"],
     required: true,
+    colSpan:6
   },
   {
     name: "userType",
@@ -50,6 +52,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
       { label: "Ordinary", value: "O" },
       { label: "External", value: "E" },
     ],
+    colSpan:6
   },
   {
     name: "status",
@@ -61,6 +64,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
       { label: "Active", value: "A" },
       { label: "Inactive", value: "I" },
     ],
+    colSpan:6
   },
 
   // PASSWORD TAB
@@ -68,24 +72,22 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     name: "password",
     label: "Password",
     type: "password",
-    tab: "Password",
     disableInModes : ["VIEW"],
-    colSpan :12
+    colSpan:6
   },
     {
     name: "confirmPassword",
     label: "Confirm Password",
     type: "password",
-    tab: "Password",
     disableInModes : ["VIEW"],
-    colSpan :12
+    colSpan:6
   },
 
 {
   name: "loginId",
   label: "",
   type: "text",
-  tab: "Companies",
+  tab: "Company Privilege",
   disableInModes : ["VIEW"],
   hideInModes: ["ADD", "EDIT", "VIEW"],
 },
@@ -93,7 +95,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
   name: "loginId",
   label: "",
   type: "text",
-  tab: "Privileges",
+  tab: "Menu Privilege",
   disableInModes : ["VIEW"],
   hideInModes: ["ADD", "EDIT", "VIEW"],
 },

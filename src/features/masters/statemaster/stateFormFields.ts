@@ -14,6 +14,7 @@ export const stateFormFields: FormFieldConfig<any>[] = [
     label: "State Code",
     type: "text",
     required: true,
+    uppercase: true,
   },
   {
     name: "codeDesc",

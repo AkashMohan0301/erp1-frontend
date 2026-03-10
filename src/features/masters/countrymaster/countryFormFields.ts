@@ -6,6 +6,7 @@ export const countryFormFields: FormFieldConfig<any>[] = [
     label: "Country Code",
     type: "text",
     required: true,
+    uppercase: true,
   },
   {
     name: "codeDesc",

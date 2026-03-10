@@ -9,7 +9,7 @@ import type { FormProps } from "./reusableFormTypes";
 import { usePopup } from "../popupDialog/PopupProvider";
 import { redirect } from "next/navigation";
 import { Card } from "../ui/card";
-
+import { COL_SPANS, ROW_SPANS } from "./gridSpanHelpers";
 import { setFormMode } from "@/store/authContextSlice";
 import { useAppDispatch } from "@/store/hooks";
 
@@ -20,7 +20,7 @@ export function ReusableForm<T>({
   onSubmit,
   mode: initialMode,
   formClassName,
-  gridClassName = "grid grid-cols-1 md:grid-cols-2 gap-6",
+  gridClassName = "grid grid-cols-1 md:grid-cols-12 gap-3 auto-rows-[minmax(60px,auto)]",
   onValueChange,
   externalData,
   loadingActions = [],
@@ -205,11 +205,18 @@ export function ReusableForm<T>({
 
             <div className={gridClassName}>
               {fields
-                .filter((f) => (f.tab ?? "General") === currentTab)
+                .filter((f) => {
+                  const tabMatch = (f.tab ?? "General") === currentTab;
+                  const hidden = f.hideInModes?.includes(mode);
+                  return tabMatch && !hidden;
+                })
                 .map((field) => (
                   <div
                     key={field.name}
-                    className={`col-span-${field.colSpan ?? 1}`}
+                    className={`min-w-0 w-full
+        ${COL_SPANS[(field.colSpan ?? 12) as keyof typeof COL_SPANS]}
+        ${ROW_SPANS[(field.rowSpan ?? 1) as keyof typeof ROW_SPANS]}
+      `}
                   >
                     <FormField
                       config={field}
