@@ -144,6 +144,7 @@ export function ReusableForm<T>({
         reset();
         resetUI();
         onReset?.();
+        setMode("ADD")
         break;
 
       case "exit":

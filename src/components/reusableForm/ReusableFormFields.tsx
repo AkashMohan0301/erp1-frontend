@@ -126,16 +126,11 @@ export function FormField<T>({
             className={config.uppercase ? "uppercase" : ""}
             onChange={(e) => {
               let val = e.target.value;
-
-              if (config.uppercase) {
-                val = val.toUpperCase();
-              }
-
+              if (config.uppercase) val = val.toUpperCase();
               onChange(val);
             }}
           />
         );
-
       case "password":
         return (
           <Input
@@ -249,9 +244,41 @@ export function FormField<T>({
           <>
             <div className="flex gap-2">
               <Input
+                type={config.inputType ?? "number"} // ✅ only used here
                 value={value ?? ""}
                 disabled={isDisabled}
-                onChange={(e) => onChange(Number(e.target.value))}
+                onChange={(e) => {
+                  const val = e.target.value.trim();
+
+                  if (val === "") {
+                    onChange(null);
+                    return;
+                  }
+
+                  if (config.inputType === "number") {
+                    const num = Number(val);
+                    if (isNaN(num)) return;
+                    onChange(num);
+                  } else {
+                    onChange(val);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (config.inputType === "number") {
+                    if (
+                      !/[0-9]/.test(e.key) &&
+                      ![
+                        "Backspace",
+                        "Delete",
+                        "ArrowLeft",
+                        "ArrowRight",
+                        "Tab",
+                      ].includes(e.key)
+                    ) {
+                      e.preventDefault();
+                    }
+                  }
+                }}
               />
 
               {!config.hideFilterInModes?.includes(mode) && !isDisabled && (
@@ -302,7 +329,11 @@ export function FormField<T>({
 
       {renderInput()}
 
-      {error ? <p className="text-sm text-red-500">{error}</p> : <p className="text-sm text-muted-foreground">{config.fieldmessage}</p>}
+      {error ? (
+        <p className="text-sm text-red-500">{error}</p>
+      ) : (
+        <p className="text-sm text-muted-foreground">{config.fieldmessage}</p>
+      )}
     </div>
   );
 }

@@ -10,6 +10,7 @@ export const companyFormFields: FormFieldConfig<CompanySchema>[] = [
   name: "companyId",
   label: "Company ID",
   type: "lookup",
+  inputType: "number",
   colSpan: 6,
   lookupConfig: companySearchConfig,
   disableInModes : ["ADD"]

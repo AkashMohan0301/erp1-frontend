@@ -13,6 +13,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     label: "User ID",
     type: "lookup",
     colSpan: 6,
+    inputType: "number",
     lookupConfig: userSearchConfig,
     disableInModes: ["ADD"],
     fieldmessage: "Enter User ID to search existing user. Leave blank to create new user."
@@ -31,6 +32,7 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     name: "loginId",
     label: "Login ID",
     type: "text",
+    inputType:"number",
     disableInModes : ["VIEW"],
     required: true,
     colSpan:6

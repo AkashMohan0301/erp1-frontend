@@ -13,6 +13,8 @@ export type FormFieldType =
   | "textarea"
   |"password";
 
+
+
 export interface FormFieldConfig<T> {
   name: keyof T & string;
   label: string;
@@ -40,8 +42,10 @@ export interface FormFieldConfig<T> {
   disableInModes?: FormMode[];
   hideFilterInModes?: FormMode[];
 
-  uppercase?: boolean;   // 👈 ADD THIS
-  fieldmessage?: string; // 👈 ADD THIS
+  uppercase?: boolean; 
+  fieldmessage?: string; 
+
+  inputType?: "text" | "number";
 
 }
 
