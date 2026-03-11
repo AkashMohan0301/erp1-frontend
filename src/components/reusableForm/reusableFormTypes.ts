@@ -41,6 +41,7 @@ export interface FormFieldConfig<T> {
   hideFilterInModes?: FormMode[];
 
   uppercase?: boolean;   // 👈 ADD THIS
+  fieldmessage?: string; // 👈 ADD THIS
 
 }
 

@@ -12,18 +12,20 @@ export const userFormFields: FormFieldConfig<UserFormValues>[] = [
     name: "userId",
     label: "User ID",
     type: "lookup",
-    colSpan: 12,
+    colSpan: 6,
     lookupConfig: userSearchConfig,
     disableInModes: ["ADD"],
+    fieldmessage: "Enter User ID to search existing user. Leave blank to create new user."
     },
     {
   name: "companyId",
   label: "Default Company ID",
   type: "lookup",
   required: true,
-  colSpan: 12,
+  colSpan: 6,
   lookupConfig: companySearchConfig,
-  disableInModes: ["VIEW"]
+  disableInModes: ["VIEW","EDIT"],
+  fieldmessage: "Select default company for the user."
 },
   {
     name: "loginId",

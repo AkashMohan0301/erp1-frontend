@@ -35,18 +35,12 @@ export function ReusableForm<T>({
   const { values, errors, handleChange, handleSubmit, setValues, reset } =
     useReusableForm<T>({ initialValues, schema, onSubmit });
 
-  /* =================================
-     Sync mode to Redux
-  ================================= */
-
+  /* Sync mode */
   useEffect(() => {
     dispatch(setFormMode(mode));
   }, [mode, dispatch]);
 
-  /* =================================
-     Tabs
-  ================================= */
-
+  /* Tabs */
   const tabs = useMemo(() => {
     const unique = new Set<string>();
     fields.forEach((f) => unique.add(f.tab ?? "General"));
@@ -57,24 +51,16 @@ export function ReusableForm<T>({
   const [errorTabs, setErrorTabs] = useState<string[]>([]);
 
   useEffect(() => {
-    if (tabs.length > 0) {
-      setActiveTab(tabs[0]);
-    }
+    if (tabs.length) setActiveTab(tabs[0]);
   }, [tabs]);
 
-  /* =================================
-     Field Change
-  ================================= */
-
+  /* Field change */
   const handleFieldChange = (name: keyof T, value: any) => {
     handleChange(name, value);
     onValueChange?.(name, value);
   };
 
-  /* =================================
-     Hydrate External Data
-  ================================= */
-
+  /* Hydrate EDIT data */
   useEffect(() => {
     if (externalData) {
       setValues(externalData as T);
@@ -82,31 +68,21 @@ export function ReusableForm<T>({
     }
   }, [externalData, setValues]);
 
-  /* =================================
-     Button disable logic
-  ================================= */
-
+  /* Disabled buttons */
   const computedDisabledActions = useMemo(() => {
     const disabled = new Set(disabledActions);
-
     if (mode === "VIEW") disabled.add("save");
     if (mode === "EDIT") disabled.add("add");
-
     return Array.from(disabled);
   }, [mode, disabledActions]);
 
-  const handleReset = () => {
+  /* Common UI reset */
+  const resetUI = () => {
     setErrorTabs([]);
-    reset();
-    if (tabs.length > 0) {
-      setActiveTab(tabs[0]);
-    }
+    if (tabs.length) setActiveTab(tabs[0]);
   };
 
-  /* =================================
-     Actions
-  ================================= */
-
+  /* Actions */
   const handleAction = async (action: string) => {
     switch (action) {
       case "save": {
@@ -115,25 +91,23 @@ export function ReusableForm<T>({
         const result = await handleSubmit();
 
         if (!result.hasError) {
-          setErrorTabs([]);
-
           show({
             type: "success",
             title: "Success",
-            message: "Saved successfully",
+            message: result?.message ?? "Data saved successfully",
           });
 
-          setValues(initialValues);
+          reset();     // form state
+          resetUI();   // tab state
           setMode("ADD");
         } else {
           if (result.fieldErrors) {
             const errorKeys = Object.keys(result.fieldErrors);
-
             const tabsWithErrors = fields
               .filter((f) => errorKeys.includes(f.name))
               .map((f) => f.tab ?? "General");
 
-            if (tabsWithErrors.length > 0) {
+            if (tabsWithErrors.length) {
               setActiveTab(tabsWithErrors[0]);
               setErrorTabs([...new Set(tabsWithErrors)]);
             }
@@ -145,7 +119,6 @@ export function ReusableForm<T>({
             message: "Please fix the highlighted errors",
           });
         }
-
         break;
       }
 
@@ -154,24 +127,23 @@ export function ReusableForm<T>({
         break;
 
       case "add":
-        setValues(initialValues);
-        handleReset();
+        reset();
+        resetUI();
         onReset?.();
         setMode("ADD");
-        setErrorTabs([]);
         break;
 
       case "view":
-        setValues(initialValues);
-        handleReset();
+        reset();
+        resetUI();
         onReset?.();
         setMode("VIEW");
         break;
 
       case "reset":
-        handleReset();
+        reset();
+        resetUI();
         onReset?.();
-        setMode("ADD");
         break;
 
       case "exit":
@@ -180,10 +152,7 @@ export function ReusableForm<T>({
     }
   };
 
-  /* =================================
-     Render
-  ================================= */
-
+  /* Render */
   return (
     <div className={formClassName}>
       <ResusableButtonBar
@@ -201,8 +170,6 @@ export function ReusableForm<T>({
       >
         {(currentTab) => (
           <Card>
-            {/* Default Fields */}
-
             <div className={gridClassName}>
               {fields
                 .filter((f) => {
@@ -214,9 +181,9 @@ export function ReusableForm<T>({
                   <div
                     key={field.name}
                     className={`min-w-0 w-full
-        ${COL_SPANS[(field.colSpan ?? 12) as keyof typeof COL_SPANS]}
-        ${ROW_SPANS[(field.rowSpan ?? 1) as keyof typeof ROW_SPANS]}
-      `}
+                      ${COL_SPANS[(field.colSpan ?? 12) as keyof typeof COL_SPANS]}
+                      ${ROW_SPANS[(field.rowSpan ?? 1) as keyof typeof ROW_SPANS]}
+                    `}
                   >
                     <FormField
                       config={field}
@@ -228,6 +195,7 @@ export function ReusableForm<T>({
                   </div>
                 ))}
             </div>
+
             {loadingActions.includes("save") && (
               <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
                 <div className="bg-white px-6 py-4 rounded shadow">
@@ -235,7 +203,6 @@ export function ReusableForm<T>({
                 </div>
               </div>
             )}
-            {/* Custom Tab Content */}
 
             {children?.(currentTab, values, setValues)}
           </Card>

@@ -230,7 +230,7 @@ export function FormField<T>({
             disabled={isDisabled}
             onValueChange={onChange}
           >
-            <SelectTrigger className="!w-full min-w-0">
+            <SelectTrigger className="w-full min-w-0">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
 
@@ -302,7 +302,7 @@ export function FormField<T>({
 
       {renderInput()}
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error ? <p className="text-sm text-red-500">{error}</p> : <p className="text-sm text-muted-foreground">{config.fieldmessage}</p>}
     </div>
   );
 }
